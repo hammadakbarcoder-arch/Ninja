@@ -242,12 +242,15 @@
 
                     <div class="d-flex flex-wrap align-items-center gap-2">
                         <!-- Multi-Language Selector -->
-                        <select class="form-select form-select-sm" style="width: auto; background: #f8fafc !important; color: #0f172a !important; font-weight: 700 !important; border: 2px solid #94a3b8 !important; border-radius: 8px;" t-model="state.aiLanguage" title="Choose AI Response &amp; Report Language">
-                            <option value="auto">🌐 Language: Auto (English Default)</option>
-                            <option value="en">🇬🇧 English</option>
-                            <option value="ro_ur">🇵🇰 Roman Urdu (اردو/Eng)</option>
-                            <option value="ur">🇵🇰 اردو (Urdu)</option>
-                            <option value="ar">🇸🇦 العربية (Arabic)</option>
+                        <select class="form-select form-select-sm"
+                                style="width: auto; background: #eff6ff !important; color: #1e3a8a !important; font-weight: 800 !important; border: 2px solid #2563eb !important; border-radius: 8px;"
+                                t-model="state.aiLanguage"
+                                t-on-change="(ev) => this.onAILanguageChange(ev)"
+                                title="Select Report Language (Report will be generated in this exact language)">
+                            <option value="en">🇬🇧 Language: English</option>
+                            <option value="ro_ur">🇵🇰 Language: Roman Urdu</option>
+                            <option value="ur">🇵🇰 Language: اردو (Urdu)</option>
+                            <option value="ar">🇸🇦 Language: العربية (Arabic)</option>
                         </select>
 
                         <!-- Speak Report (Voice Output) -->
@@ -303,28 +306,28 @@
                     </button>
                 </div>
 
-                <!-- Quick 1-Click Report Buttons (High Contrast) -->
+                <!-- Quick 1-Click Report Buttons (High Contrast, Respects Selected Language) -->
                 <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
                     <span class="small fw-bold" style="color: #334155 !important;">Quick 1-Click Reports:</span>
                     <button class="btn btn-sm rounded-pill px-3 py-1"
                             style="background: #eff6ff !important; color: #1e3a8a !important; border: 1.5px solid #60a5fa !important; font-weight: 700 !important; font-size: 12px !important;"
-                            t-on-click="() => this.runQuickReportPrompt('Generate Complete Executive Sales &amp; KPI Performance Report', 'en')">
-                        📊 Complete Sales &amp; KPI Report
+                            t-on-click="() => this.runQuickReportPrompt('Generate Complete Sales &amp; Revenue Performance Report')">
+                        📊 Sales &amp; Revenue Report
                     </button>
                     <button class="btn btn-sm rounded-pill px-3 py-1"
                             style="background: #f0fdf4 !important; color: #14532d !important; border: 1.5px solid #4ade80 !important; font-weight: 700 !important; font-size: 12px !important;"
-                            t-on-click="() => this.runQuickReportPrompt('Generate Executive Financial &amp; Revenue Report', 'en')">
-                        💰 Financial &amp; Revenue Report
+                            t-on-click="() => this.runQuickReportPrompt('Generate Executive Financial, Invoicing &amp; Cashflow Report')">
+                        💰 Financial &amp; Invoice Report
                     </button>
                     <button class="btn btn-sm rounded-pill px-3 py-1"
                             style="background: #fefce8 !important; color: #713f12 !important; border: 1.5px solid #facc15 !important; font-weight: 700 !important; font-size: 12px !important;"
-                            t-on-click="() => this.runQuickReportPrompt('Give me Auto Summary and 4 Smart Suggestions to boost growth', 'en')">
-                        💡 Auto Summary &amp; Smart Suggestions
+                            t-on-click="() => this.runQuickReportPrompt('Generate CRM Pipeline, Leads &amp; Customer Conversion Report')">
+                        🤝 CRM &amp; Leads Report
                     </button>
                     <button class="btn btn-sm rounded-pill px-3 py-1"
                             style="background: #f5f3ff !important; color: #4c1d95 !important; border: 1.5px solid #a78bfa !important; font-weight: 700 !important; font-size: 12px !important;"
-                            t-on-click="() => this.runQuickReportPrompt('Sales aur Revenue ki mukammal report aur smart advice banao', 'ro_ur')">
-                        🇵🇰 Sales Report (Roman Urdu)
+                            t-on-click="() => this.runQuickReportPrompt('Generate Inventory, Supply Chain &amp; Operations Report')">
+                        📦 Inventory &amp; Operations Report
                     </button>
                 </div>
 
@@ -375,24 +378,24 @@
                                         </strong>
                                     </div>
                                     <div class="table-responsive">
-                                        <table class="table table-sm align-middle mb-0 small" style="color: #0f172a !important;">
-                                            <thead style="background: #f1f5f9 !important; color: #0f172a !important; font-weight: 800 !important;">
-                                                <tr>
-                                                    <th style="color: #0f172a !important;">Metric</th>
-                                                    <th style="color: #0f172a !important;">Actual</th>
-                                                    <th style="color: #0f172a !important;">Target</th>
-                                                    <th style="color: #0f172a !important;">Achievement</th>
-                                                    <th style="color: #0f172a !important;">Status</th>
+                                        <table class="table table-sm align-middle mb-0 small ninja_white_kpi_table" style="background-color: #ffffff !important; color: #0f172a !important; --bs-table-bg: #ffffff !important; --bs-table-color: #0f172a !important;">
+                                            <thead style="background-color: #f1f5f9 !important; color: #0f172a !important; font-weight: 800 !important;">
+                                                <tr style="background-color: #f1f5f9 !important; color: #0f172a !important;">
+                                                    <th style="background-color: #f1f5f9 !important; color: #0f172a !important; padding: 8px;">Metric</th>
+                                                    <th style="background-color: #f1f5f9 !important; color: #0f172a !important; padding: 8px;">Actual</th>
+                                                    <th style="background-color: #f1f5f9 !important; color: #0f172a !important; padding: 8px;">Target</th>
+                                                    <th style="background-color: #f1f5f9 !important; color: #0f172a !important; padding: 8px;">Achievement</th>
+                                                    <th style="background-color: #f1f5f9 !important; color: #0f172a !important; padding: 8px;">Status</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody style="background-color: #ffffff !important; color: #0f172a !important;">
                                                 <t t-foreach="state.currentReport.analytics_rows || []" t-as="row" t-key="row_index">
-                                                    <tr>
-                                                        <td style="color: #0f172a !important; font-weight: 700 !important;" t-esc="row.name"/>
-                                                        <td style="color: #0f172a !important; font-weight: 800 !important;" t-esc="row.value"/>
-                                                        <td style="color: #475569 !important; font-weight: 600 !important;" t-esc="row.target"/>
-                                                        <td><span class="badge" style="background: #e2e8f0 !important; color: #0f172a !important; font-weight: 800 !important;" t-esc="row.achievement"/></td>
-                                                        <td>
+                                                    <tr style="background-color: #ffffff !important; color: #0f172a !important; border-bottom: 1px solid #e2e8f0 !important;">
+                                                        <td style="background-color: #ffffff !important; color: #0f172a !important; font-weight: 700 !important; padding: 8px;" t-esc="row.name"/>
+                                                        <td style="background-color: #ffffff !important; color: #0f172a !important; font-weight: 800 !important; padding: 8px;" t-esc="row.value"/>
+                                                        <td style="background-color: #ffffff !important; color: #475569 !important; font-weight: 600 !important; padding: 8px;" t-esc="row.target"/>
+                                                        <td style="background-color: #ffffff !important; padding: 8px;"><span class="badge" style="background: #e2e8f0 !important; color: #0f172a !important; font-weight: 800 !important;" t-esc="row.achievement"/></td>
+                                                        <td style="background-color: #ffffff !important; padding: 8px;">
                                                             <span t-attf-class="badge #{row.status === 'Exceeded' ? 'bg-success' : (row.status === 'On Track' ? 'bg-primary' : 'bg-warning text-dark')}" style="font-weight: 700;" t-esc="row.status"/>
                                                         </td>
                                                     </tr>

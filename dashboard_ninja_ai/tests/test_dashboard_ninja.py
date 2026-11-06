@@ -210,23 +210,40 @@ class TestDashboardNinja(TransactionCase):
         self.assertTrue(mgr_visible, "Dashboard Manager must have full visibility across boards")
 
     def test_14_multilang_ai_report_and_data_upload(self):
-        """Test Multi-Language AI Report Generator (English, Roman Urdu, Urdu) and CSV/Excel Data Upload."""
+        """Test Topic-Specific & Multi-Language AI Report Generator (English, Roman Urdu, Urdu, Arabic) and Data Upload."""
         import base64
         ai_svc = self.env['dashboard.ninja.ai.service']
 
-        # 1. Roman Urdu auto-detection & report generation
-        rep_ro_ur = ai_svc.generate_ai_report(self.board.id, user_prompt='Sales aur Revenue ki mukammal report banao')
+        # 1. Explicit English selection even with mixed prompt
+        rep_en_sales = ai_svc.generate_ai_report(self.board.id, user_prompt='Generate Sales and Revenue Report', lang='en')
+        self.assertEqual(rep_en_sales['status'], 'success')
+        self.assertEqual(rep_en_sales['lang'], 'en')
+        self.assertEqual(rep_en_sales['topic_key'], 'sales')
+
+        # 2. Financial report produces distinct topic, title, and rows from Sales report
+        rep_en_fin = ai_svc.generate_ai_report(self.board.id, user_prompt='Generate Financial and Invoice Report', lang='en')
+        self.assertEqual(rep_en_fin['topic_key'], 'finance')
+        self.assertNotEqual(rep_en_sales['title'], rep_en_fin['title'])
+        self.assertNotEqual(rep_en_sales['analytics_rows'][0]['name'], rep_en_fin['analytics_rows'][0]['name'])
+
+        # 3. Roman Urdu report generation
+        rep_ro_ur = ai_svc.generate_ai_report(self.board.id, user_prompt='Sales aur Revenue ki mukammal report banao', lang='ro_ur')
         self.assertEqual(rep_ro_ur['status'], 'success')
         self.assertEqual(rep_ro_ur['lang'], 'ro_ur')
         self.assertTrue(len(rep_ro_ur['analytics_rows']) >= 1)
         self.assertTrue(len(rep_ro_ur['smart_suggestions']) >= 1)
 
-        # 2. Urdu script detection & report generation
-        rep_ur = ai_svc.generate_ai_report(self.board.id, user_prompt='سیلز اور منافع کی رپورٹ بنائیں')
+        # 4. Urdu script & Arabic report generation
+        rep_ur = ai_svc.generate_ai_report(self.board.id, user_prompt='سیلز اور منافع کی رپورٹ بنائیں', lang='ur')
         self.assertEqual(rep_ur['status'], 'success')
         self.assertEqual(rep_ur['lang'], 'ur')
 
-        # 3. CSV Data Upload & Analytics
+        rep_ar = ai_svc.generate_ai_report(self.board.id, user_prompt='Generate CRM Report', lang='ar')
+        self.assertEqual(rep_ar['status'], 'success')
+        self.assertEqual(rep_ar['lang'], 'ar')
+        self.assertEqual(rep_ar['topic_key'], 'crm')
+
+        # 5. CSV Data Upload & Analytics
         csv_content = b"Product,Revenue\nEnterprise License,540\nAI Copilot,380\nCloud Hosting,290\n"
         b64_data = base64.b64encode(csv_content).decode('utf-8')
         up_res = ai_svc.upload_and_analyze_data(self.board.id, 'sales_q4.csv', b64_data, lang='ro_ur')
