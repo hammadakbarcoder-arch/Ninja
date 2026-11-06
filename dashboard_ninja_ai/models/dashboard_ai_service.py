@@ -31,12 +31,12 @@ class DashboardNinjaAIService(models.AbstractModel):
             if any(w in text for w in ['ہے', 'ہیں', 'کا', 'کی', 'کے', 'رپورٹ', 'بنائیں', 'ڈیٹا']):
                 return 'ur'
             return 'ar'
-        # Check for Roman Urdu keywords
+        # Check for Roman Urdu keywords (strictly non-English words so English prompts stay in English)
         low = f" {text.lower()} "
         roman_urdu_words = [
             ' kya ', ' kia ', ' hai ', ' hain ', ' mujhe ', ' mujy ', ' banao ', ' bna ',
             ' dikhao ', ' batao ', ' btao ', ' kesa ', ' kaisa ', ' kitna ', ' kitny ',
-            ' aur ', ' or ', ' ka ', ' ki ', ' ke ', ' mein ', ' main ', ' se ', ' sy ',
+            ' aur ', ' ka ', ' ki ', ' ke ', ' mein ', ' sy ', ' mukammal ',
             ' hisab ', ' munafa ', ' nuqsan ', ' kharcha ', ' karobar ', ' zaban '
         ]
         if any(w in low for w in roman_urdu_words):
@@ -224,7 +224,7 @@ class DashboardNinjaAIService(models.AbstractModel):
         }
 
         if board and board.exists():
-            board.sudo().with_context(tracking_disable=True).write({'ai_summary': f"{auto_summary}\n\n{briefing}"})
+            board.sudo().with_context(tracking_disable=True).write({'ai_summary': auto_summary})
 
         return report_payload
 
