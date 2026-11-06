@@ -433,6 +433,22 @@
                 opacity: 1 !important;
             }
         }
+
+        table, thead, tbody, tr, th, td {
+            --bs-table-bg: #ffffff !important;
+            --bs-table-accent-bg: #ffffff !important;
+            --bs-table-striped-bg: #f8fafc !important;
+            --bs-table-hover-bg: #f1f5f9 !important;
+            --bs-table-color: #0f172a !important;
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            -webkit-text-fill-color: #0f172a !important;
+        }
+
+        thead th {
+            background-color: #f1f5f9 !important;
+            font-weight: 800 !important;
+        }
     }
 
     .ninja_ai_response_box {
