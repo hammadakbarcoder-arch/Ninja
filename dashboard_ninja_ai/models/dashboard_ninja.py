@@ -320,7 +320,7 @@ class DashboardNinjaBoard(models.Model):
             'board_id': 'all' if is_all_mode else board.id,
             'real_board_id': board.id,
             'name': board.name,
-            'ai_summary': board.ai_summary or "Click 'Ask Copilot' to generate real-time executive insights.",
+            'ai_summary': "",
             'items': items_data,
             'date_filter': date_filter,
             'date_from': date_from,
