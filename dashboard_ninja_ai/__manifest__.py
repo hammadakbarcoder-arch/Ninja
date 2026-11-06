@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Dashboard Ninja with AI',
-    'version': '18.0.5.0.0',
+    'name': 'Dashboard Ninja with AGI',
+    'version': '18.0.4.0.0',
     'category': 'Productivity/Dashboards',
     'summary': 'All-in-One AI Dashboard, Multi-Language AI Report Generator, Excel/PDF Upload & 6+ Chart Types (First 10 Buyers: $149 + FREE Custom Feature | Regular: $210)',
     'description': """
@@ -11,7 +11,7 @@ Dashboard Ninja with AI — By Hammad Akbar
 🎁 EXCLUSIVE FIRST 10 BUYERS BONUS: Any Extra Feature or Custom Dashboard Requirement Added 100% FREE!
 
 Transform your Odoo business data into a next-generation autonomous AI command center:
-- AI Report Generator (Multi-Language: English, Roman Urdu, Urdu, Arabic) with Auto-Summary, Analytics Table & Smart Suggestions.
+- AI Report Generator (Multi-Language: English, Roman Urdu, Arabic) with Auto-Summary, Analytics Table & Smart Suggestions.
 - Data Upload Studio: Upload Excel (.xlsx/.xls), CSV, PDF, or JSON files for instant AI analysis & 1-click chart plotting.
 - 1-Click PDF Export & Excel/CSV Export + Voice Command AI & Read-Aloud Speech Synthesis.
 - 6 Signature Pastel KPI Cards (with Vs Target progress bars) & 6+ Interactive Chart Types (Bar, Doughnut, Line, Radar, 3D Funnel, Pie).
