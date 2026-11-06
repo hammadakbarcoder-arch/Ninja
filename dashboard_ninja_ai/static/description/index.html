@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Dashboard Ninja with AI by Hammad Akbar</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1e293b; background-color: #f8fafc; margin: 0; padding: 0;">
+    <div id="ninja-store-root" style="max-width: 1000px; margin: 0 auto; padding: 30px 20px;">
+        
+        <!-- Header Branding Bar + Interactive Store Version Selector (19.0 / 18.0 / 17.0 / 16.0) -->
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 24px; background-color: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 16px; height: 16px; background-color: #dc2626; transform: rotate(45deg);"></div>
+                <div>
+                    <h2 style="margin: 0; font-size: 22px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">HAMMAD AKBAR</h2>
+                    <span style="font-size: 13px; color: #64748b; font-weight: 600;">AI First, Always • Enterprise Odoo Solutions</span>
+                </div>
+            </div>
+
+            <!-- Store Version Selector Pills: Click 17.0 to Play Video #2, Default Plays Video #1 -->
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <span style="font-size: 12px; font-weight: 800; color: #475569; text-transform: uppercase; margin-right: 4px;">Version:</span>
+                <a href="#ninja-ver-19" id="btn-ver-19" class="ninja-store-ver-btn" style="display: inline-block; background-color: #2563eb; color: #ffffff; padding: 7px 16px; border-radius: 9999px; text-decoration: none; font-weight: 800; font-size: 13px; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);">19.0</a>
+                <a href="#ninja-ver-18" id="btn-ver-18" class="ninja-store-ver-btn" style="display: inline-block; background-color: #f1f5f9; color: #1e293b; padding: 7px 16px; border-radius: 9999px; text-decoration: none; font-weight: 700; font-size: 13px; border: 1px solid #cbd5e1;">18.0</a>
+                <a href="#ninja-ver-17" id="btn-ver-17" class="ninja-store-ver-btn" style="display: inline-block; background: linear-gradient(135deg, #dc2626, #2563eb); color: #ffffff; padding: 7px 18px; border-radius: 9999px; text-decoration: none; font-weight: 800; font-size: 13px; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);">▶ 17.0</a>
+                <a href="#ninja-ver-16" id="btn-ver-16" class="ninja-store-ver-btn" style="display: inline-block; background-color: #f1f5f9; color: #1e293b; padding: 7px 16px; border-radius: 9999px; text-decoration: none; font-weight: 700; font-size: 13px; border: 1px solid #cbd5e1;">16.0</a>
+            </div>
+        </div>
+
+        <!-- SPECIAL FIRST 10 BUYERS LAUNCH OFFER BANNER ($149 vs $210 + FREE CUSTOMIZATION BONUS) -->
+        <div style="margin: 22px 0; padding: 22px 28px; border-radius: 18px; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 55%, #7f1d1d 100%); color: #ffffff; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; box-shadow: 0 16px 32px rgba(15, 23, 42, 0.22); border: 2px solid #ef4444;">
+            <div style="max-width: 680px;">
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
+                    <span style="display: inline-block; background-color: #ef4444; color: #ffffff; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.6px;">
+                        🔥 Limited Early-Bird Offer • First 10 Buyers Only
+                    </span>
+                    <span style="display: inline-block; background-color: #16a34a; color: #ffffff; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.6px;">
+                        🎁 + FREE Extra Feature / Customization Included!
+                    </span>
+                </div>
+                <h3 style="margin: 0 0 6px 0; font-size: 23px; font-weight: 900; color: #ffffff;">
+                    Grab Complete All-in-One AI Dashboard for <span style="color: #38bdf8;">$149 USD</span>!
+                </h3>
+                <p style="margin: 0 0 6px 0; font-size: 14px; color: #cbd5e1; line-height: 1.5;">
+                    Special introductory price for the <strong>first 10 buyers</strong> (increases to <strong>$210 USD</strong> after 10 sales).
+                </p>
+                <div style="background: rgba(34, 197, 94, 0.16); border: 1px solid rgba(74, 222, 128, 0.45); padding: 8px 14px; border-radius: 10px; font-size: 13px; color: #bbf7d0; font-weight: 600;">
+                    ✨ <strong>First 10 Buyers Exclusive VIP Bonus:</strong> Need any extra chart, custom KPI, or bespoke report feature added? We will build &amp; integrate your custom requirement <strong>100% FREE of charge</strong>!
+                </div>
+            </div>
+            <div style="text-align: center; background: rgba(255, 255, 255, 0.1); padding: 14px 24px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.22);">
+                <div style="font-size: 12px; color: #fca5a5; text-decoration: line-through; font-weight: 700;">Regular Price: $210.00</div>
+                <div style="font-size: 32px; font-weight: 900; color: #4ade80; line-height: 1.1;">$149.00</div>
+                <div style="font-size: 11px; color: #fde047; font-weight: 700; margin-top: 4px;">+ FREE Custom Feature</div>
+                <div style="font-size: 11px; color: #e2e8f0; font-weight: 600;">First 10 Buyers Only</div>
+            </div>
+        </div>
+
+        <!-- VIDEO #1 (DEFAULT ALWAYS PLAYING IN FRONT): Main Module Showcase (Odoo 19.0 / 18.0 / 16.0) -->
+        <div id="ninja-showcase-v19" style="text-align: center; margin: 28px 0; background-color: #ffffff; padding: 24px; border-radius: 20px; border: 1px solid #e2e8f0; box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);">
+            <div style="margin-bottom: 14px; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <span id="ninja-active-ver-badge" style="display: inline-block; background-color: #dbeafe; color: #1d4ed8; padding: 5px 14px; border-radius: 9999px; font-size: 12px; font-weight: 800; text-transform: uppercase;">
+                    ● Live Showcase — Odoo 19.0 (All-in-One AI Edition)
+                </span>
+                <span style="font-size: 12px; color: #64748b; font-weight: 600;">
+                    Click <strong>▶ 17.0</strong> above to watch the Odoo 17.0 Generative AI Video
+                </span>
+            </div>
+            <video id="ninja-video-v19" src="/dashboard_ninja_ai/static/description/banner_v19.webm" poster="/dashboard_ninja_ai/static/description/banner.gif" autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline" controls="controls" style="max-width: 100%; width: 860px; border-radius: 14px; box-shadow: 0 16px 28px rgba(0, 0, 0, 0.14); border: 1px solid #cbd5e1; margin-bottom: 12px;"></video>
+            <div>
+                <img src="banner.gif" alt="Dashboard Ninja with AI by Hammad Akbar" style="max-width: 100%; width: 860px; border-radius: 14px; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0;">
+            </div>
+        </div>
+
+        <!-- VIDEO #2 (PLAYS WHEN USER CLICKS 17.0): Odoo 17.0 Generative AI Video Showcase -->
+        <div id="ninja-showcase-v17" style="display: none; text-align: center; margin: 28px 0; background-color: #0f172a; padding: 26px; border-radius: 20px; border: 2px solid #3b82f6; box-shadow: 0 20px 36px rgba(15, 23, 42, 0.28);">
+            <div style="margin-bottom: 14px; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <span style="display: inline-block; background: linear-gradient(135deg, #dc2626, #2563eb); color: #ffffff; padding: 6px 16px; border-radius: 9999px; font-size: 12px; font-weight: 800; text-transform: uppercase;">
+                    ▶ Now Playing — Odoo 17.0 Generative AI Video Showcase
+                </span>
+                <span style="display: inline-block; background-color: rgba(255,255,255,0.12); color: #e2e8f0; padding: 5px 14px; border-radius: 9999px; font-size: 12px; font-weight: 700;">
+                    By Hammad Akbar • AI First, Always
+                </span>
+                <a href="#ninja-ver-19" style="display: inline-block; background-color: #334155; color: #38bdf8; padding: 5px 14px; border-radius: 9999px; font-size: 12px; font-weight: 700; text-decoration: none;">
+                    ← Back to 19.0 Video
+                </a>
+            </div>
+            <video id="ninja-video-v17" src="/dashboard_ninja_ai/static/description/banner_v17.webm" poster="/dashboard_ninja_ai/static/description/banner_v17.gif" autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline" controls="controls" style="max-width: 100%; width: 860px; border-radius: 14px; box-shadow: 0 20px 30px rgba(0, 0, 0, 0.35); border: 1px solid #475569; margin-bottom: 12px;"></video>
+            <div>
+                <img src="banner_v17.gif" alt="Odoo 17.0 Dashboard Ninja with AI - By Hammad Akbar" style="max-width: 100%; width: 860px; border-radius: 14px; border: 1px solid #334155;">
+            </div>
+        </div>
+
+        <!-- Title & Badges -->
+        <div style="text-align: center; margin-bottom: 40px;">
+            <span style="display: inline-block; background-color: #e0f2fe; color: #0284c7; padding: 6px 16px; border-radius: 9999px; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 12px;">Supported Versions: 19.0 • 18.0 • 17.0 • 16.0</span>
+            <h1 style="font-size: 36px; font-weight: 900; color: #0f172a; margin: 0 0 16px 0;">Dashboard Ninja with AI</h1>
+            <p style="font-size: 18px; color: #64748b; max-width: 720px; margin: 0 auto; line-height: 1.6;">
+                Turn your Odoo database into an autonomous AI visual command center. Features Multi-Language AI Report Generation, Excel/CSV/PDF Data Upload, Voice AI, 6+ Chart Types, and 4 Studio Themes.
+            </p>
+        </div>
+
+        <!-- Key Features Grid (6 Cards) -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 50px;">
+            <div style="background-color: #ffffff; padding: 26px; border-radius: 16px; border: 1px solid #e2e8f0;">
+                <div style="font-size: 30px; margin-bottom: 10px;">📄</div>
+                <h3 style="font-size: 18px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0;">Multi-Language AI Report Generator</h3>
+                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin: 0;">
+                    Generate structured Executive Reports from prompts in English, Roman Urdu, Urdu, or Arabic — complete with Auto Summary, Analytics Table, Smart Suggestions, and 1-Click PDF &amp; Excel Export.
+                </p>
+            </div>
+
+            <div style="background-color: #ffffff; padding: 26px; border-radius: 16px; border: 1px solid #e2e8f0;">
+                <div style="font-size: 30px; margin-bottom: 10px;">📤</div>
+                <h3 style="font-size: 18px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0;">Excel, CSV &amp; PDF Data Upload</h3>
+                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin: 0;">
+                    Upload external spreadsheets (<code>.xlsx</code>, <code>.csv</code>, <code>.pdf</code>, <code>.json</code>). Ninja AI automatically parses rows, computes totals/averages, and plots interactive dashboard charts in 1 click.
+                </p>
+            </div>
+
+            <div style="background-color: #ffffff; padding: 26px; border-radius: 16px; border: 1px solid #e2e8f0;">
+                <div style="font-size: 30px; margin-bottom: 10px;">⚡</div>
+                <h3 style="font-size: 18px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0;">AI Dashboard Generator &amp; Domain Boards</h3>
+                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin: 0;">
+                    Switch seamlessly between All-in-One, Sales, Finance, CRM, and Operations dashboards — each showing its own dedicated KPIs and charts without duplicates.
+                </p>
+            </div>
+
+            <div style="background-color: #ffffff; padding: 26px; border-radius: 16px; border: 1px solid #e2e8f0;">
+                <div style="font-size: 30px; margin-bottom: 10px;">📊</div>
+                <h3 style="font-size: 18px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0;">6+ Chart Types &amp; 6 Pastel KPI Cards</h3>
+                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin: 0;">
+                    Includes Grouped Bar, Doughnut with % pills, Smooth Dual-Line, Radar Polygon, 3D Funnel, and Pie charts plus Vs Target progress bars and record drill-downs.
+                </p>
+            </div>
+
+            <div style="background-color: #ffffff; padding: 26px; border-radius: 16px; border: 1px solid #e2e8f0;">
+                <div style="font-size: 30px; margin-bottom: 10px;">🎨</div>
+                <h3 style="font-size: 18px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0;">4 Studio Themes, TV Mode &amp; Chatter</h3>
+                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin: 0;">
+                    Switch between Pastel Studio, Cyber Dark, Neon Matrix, and Midnight Violet. Includes TV/Focus Presentation Mode, Direct Email Briefings, and Chatter Drawer.
+                </p>
+            </div>
+
+            <div style="background-color: #ffffff; padding: 26px; border-radius: 16px; border: 1px solid #e2e8f0;">
+                <div style="font-size: 30px; margin-bottom: 10px;">🎤</div>
+                <h3 style="font-size: 18px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0;">Voice Command AI &amp; Read-Aloud</h3>
+                <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin: 0;">
+                    Control your dashboard by voice! Speak commands to generate reports, switch themes, or filter boards, and listen to AI executive summaries read aloud.
+                </p>
+            </div>
+        </div>
+
+        <!-- Compatibility & Author Footer -->
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; border-radius: 20px; padding: 40px; text-align: center;">
+            <h2 style="font-size: 26px; font-weight: 800; margin: 0 0 12px 0;">100% Compatible with Odoo 19.0, 18.0, 17.0 &amp; 16.0 (Community &amp; Enterprise)</h2>
+            <p style="color: #94a3b8; font-size: 16px; max-width: 660px; margin: 0 auto 20px auto;">
+                Built natively using Odoo OWL framework. First 10 Buyers get the complete suite for <strong>$149 USD</strong> (Reg. $210) + <strong>100% FREE Custom Feature Integration</strong>!
+            </p>
+            <div style="font-size: 14px; color: #cbd5e1;">
+                Designed &amp; Developed by <strong>Hammad Akbar</strong> • Support &amp; Customizations: <a href="https://github.com/hammadakbarcoder-arch/Ninja" style="color: #38bdf8; text-decoration: none;">GitHub Repository</a>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

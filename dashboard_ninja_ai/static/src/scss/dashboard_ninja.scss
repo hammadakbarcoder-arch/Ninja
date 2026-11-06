@@ -1,0 +1,536 @@
+// Dashboard Ninja with AI - Enterprise All-in-One Styling by Hammad Akbar (Pastel Studio + Multi-Theme)
+
+.o_action_manager {
+    overflow-y: auto !important;
+}
+
+.ninja_dashboard_container {
+    background-color: #dde5ee;
+    min-height: 100vh;
+    padding: 18px 22px 48px 22px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1e293b;
+    transition: background-color 0.25s ease, color 0.25s ease;
+
+    &.ninja_focus_mode {
+        padding: 12px 28px 60px 28px;
+    }
+
+    // --- TOP TOOLBAR ---
+    .ninja_topbar {
+        position: relative;
+        z-index: 1050;
+        background: rgba(255, 255, 255, 0.45);
+        backdrop-filter: blur(8px);
+        padding: 8px 14px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.65);
+    }
+
+    .ninja_icon_btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid #cbd5e1;
+        background: #f1f5f9;
+        color: #334155;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13.5px;
+        cursor: pointer;
+        transition: all 0.18s ease;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+
+        &:hover, &.active {
+            background: #3b5998;
+            color: #ffffff;
+            border-color: #3b5998;
+            transform: translateY(-1px);
+        }
+    }
+
+    .ninja_mini_badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        background: #e11d48;
+        color: #ffffff;
+        font-size: 9px;
+        font-weight: 700;
+        padding: 1px 5px;
+        border-radius: 10px;
+    }
+
+    .ninja_pill_select {
+        background-color: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        color: #334155;
+        border-radius: 10px;
+        font-size: 12.5px;
+        font-weight: 500;
+        padding: 5px 28px 5px 12px;
+        cursor: pointer;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+
+        &:focus {
+            border-color: #3b5998;
+            box-shadow: 0 0 0 2px rgba(59, 89, 152, 0.15);
+        }
+    }
+
+    .ninja_version_pills {
+        background: #e2e8f0;
+        padding: 3px 5px;
+        border-radius: 999px;
+        border: 1px solid #cbd5e1;
+
+        .ninja_ver_btn {
+            border: none;
+            background: transparent;
+            color: #475569;
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.18s ease;
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.7);
+                color: #0f172a;
+            }
+
+            &.active {
+                background: linear-gradient(135deg, #2563eb, #7c3aed);
+                color: #ffffff;
+                box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+            }
+        }
+    }
+
+    .ninja_version_video_card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+    }
+
+    .ninja_sparkle_btn {
+        width: 35px;
+        height: 35px;
+        border-radius: 10px;
+        border: 1px solid #c4b5fd;
+        background: #ede9fe;
+        color: #6d28d9;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: #7c3aed;
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+    }
+
+    .ninja_action_pill_btn {
+        border-radius: 10px;
+        padding: 6px 14px;
+        font-size: 12.5px;
+        font-weight: 600;
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &.ninja_create_chart_btn {
+            background: #c7d7eb;
+            color: #1e3a8a;
+            border-color: #b4c6e0;
+            &:hover {
+                background: #3b5998;
+                color: #ffffff;
+            }
+        }
+
+        &.ninja_ai_gen_btn {
+            background: #ddd6fe;
+            color: #5b21b6;
+            border-color: #c4b5fd;
+            &:hover {
+                background: #6d28d9;
+                color: #ffffff;
+            }
+        }
+    }
+
+    // --- ROW 1: 6 SIGNATURE PASTEL KPI CARDS ---
+    .ninja_kpi_row {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 14px;
+
+        @media (max-width: 1280px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        @media (max-width: 768px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    .ninja_kpi_tile {
+        border-radius: 16px;
+        padding: 15px 16px;
+        min-height: 148px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        cursor: pointer;
+        position: relative;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.55);
+
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.1);
+        }
+
+        &.ninja_tile_wide {
+            grid-column: span 2;
+            @media (max-width: 1280px) {
+                grid-column: span 1;
+            }
+        }
+
+        &.ninja_tile_rose {
+            background: #e6cece;
+            color: #2d1e2f;
+        }
+
+        &.ninja_tile_lavender {
+            background: #d8cfe8;
+            color: #2e1f47;
+        }
+
+        &.ninja_tile_sand {
+            background: #e6dec8;
+            color: #2f2a1e;
+        }
+
+        &.ninja_tile_ice {
+            background: #c7d7e8;
+            color: #1e293b;
+        }
+
+        &.ninja_tile_sage {
+            background: #c8dbd5;
+            color: #1e332d;
+        }
+
+        &.ninja_tile_sky {
+            background: #c5d6e6;
+            color: #1e293b;
+        }
+    }
+
+    .ninja_tile_icon_square {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: #4a6fa5;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+        box-shadow: 0 2px 6px rgba(74, 111, 165, 0.3);
+
+        &.sm {
+            width: 34px;
+            height: 34px;
+            font-size: 15px;
+        }
+    }
+
+    .ninja_circle_badge {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #f1f5f9;
+        color: #4a6fa5;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .ninja_tile_big_val {
+        font-size: 23px;
+        font-weight: 800;
+        line-height: 1.15;
+        color: #3b2835;
+        letter-spacing: -0.4px;
+    }
+
+    .ninja_tile_med_val {
+        font-size: 20px;
+        font-weight: 800;
+        line-height: 1.2;
+        color: #1e293b;
+    }
+
+    .ninja_tile_label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #334155;
+        background: rgba(255, 255, 255, 0.45);
+        display: inline-block;
+        padding: 1px 6px;
+        border-radius: 4px;
+        margin-top: 3px;
+    }
+
+    .ninja_tile_label_bold {
+        font-size: 14px;
+        font-weight: 700;
+        color: #334155;
+        line-height: 1.25;
+        background: rgba(255, 255, 255, 0.5);
+        padding: 2px 7px;
+        border-radius: 5px;
+    }
+
+    .ninja_pink_value_pill {
+        background: #ecc5c9;
+        color: #c83e5b;
+        font-size: 21px;
+        font-weight: 800;
+        padding: 2px 10px;
+        border-radius: 8px;
+        display: inline-block;
+    }
+
+    .ninja_sand_bottom_box {
+        background: #eef2f6;
+        height: 58px;
+        border-top: 1px solid rgba(255, 255, 255, 0.7);
+    }
+
+    .ninja_vs_target_tag {
+        font-size: 10.5px;
+        font-weight: 600;
+        color: #64748b;
+        background: rgba(255, 255, 255, 0.65);
+        padding: 1px 6px;
+        border-radius: 4px;
+        white-space: nowrap;
+    }
+
+    .ninja_target_pct {
+        font-size: 10.5px;
+        font-weight: 700;
+        color: #e11d48;
+    }
+
+    .ninja_pink_mini_pill {
+        font-size: 10px;
+        font-weight: 700;
+        background: #f4d0d6;
+        color: #be123c;
+        padding: 1px 7px;
+        border-radius: 5px;
+    }
+
+    .ninja_sky_pct_val {
+        font-size: 22px;
+        font-weight: 800;
+        color: #3b6ba5;
+        background: rgba(255, 255, 255, 0.55);
+        display: inline-block;
+        padding: 1px 8px;
+        border-radius: 6px;
+        margin-bottom: 3px;
+    }
+
+    // --- ROW 2 & 3: CHART BOXES ---
+    .ninja_chart_box {
+        position: relative;
+        z-index: 2;
+        background: #e9eef4;
+        border: 1px solid rgba(255, 255, 255, 0.75);
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover, &:focus-within, &.ninja_menu_open {
+            z-index: 1020 !important;
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+        }
+    }
+
+    .ninja_chart_title_pill {
+        background: rgba(255, 255, 255, 0.75);
+        color: #1e293b;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 6px;
+    }
+
+    .ninja_chart_opt_btn {
+        background: transparent;
+        border: none;
+        color: #64748b;
+        padding: 2px 6px;
+        border-radius: 6px;
+        cursor: pointer;
+
+        &:hover {
+            background: rgba(15, 23, 42, 0.07);
+            color: #0f172a;
+        }
+    }
+
+    // --- POPOVERS, MODALS & DRAWERS ---
+    .ninja_popover_menu {
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        z-index: 2050 !important;
+        min-width: 225px;
+        box-shadow: 0 18px 38px rgba(15, 23, 42, 0.22) !important;
+
+        .dropdown-item {
+            font-size: 13px;
+            color: #1e293b;
+            cursor: pointer;
+            &:hover {
+                background: #f1f5f9;
+            }
+        }
+    }
+
+    .ninja_custom_date_bar, .ninja_ai_copilot_panel {
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+    }
+
+    .ninja_ai_response_box {
+        background: #eef2f6;
+        color: #1e293b;
+        border-left: 4px solid #6d28d9;
+    }
+
+    .ninja_modal_backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(15, 23, 42, 0.55);
+        backdrop-filter: blur(4px);
+        z-index: 1070;
+    }
+
+    .ninja_modal_dialog {
+        background: #ffffff;
+        color: #1e293b;
+        border: 1px solid #cbd5e1;
+    }
+
+    .ninja_chatter_overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(15, 23, 42, 0.45);
+        z-index: 1065;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .ninja_chatter_drawer {
+        width: 440px;
+        max-width: 92vw;
+        height: 100vh;
+        background: #ffffff;
+        color: #1e293b;
+    }
+
+    // =========================================================================
+    // DARK & NEON THEMES (Cyber Dark, Neon Matrix, Midnight Violet)
+    // =========================================================================
+    &.ninja_theme_cyber_dark, &.ninja_theme_matrix, &.ninja_theme_midnight {
+        color: #f8fafc;
+
+        .ninja_topbar {
+            background: rgba(22, 27, 34, 0.8);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .ninja_icon_btn, .ninja_pill_select {
+            background-color: #1e293b;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+
+        .ninja_chart_box {
+            background: #161b22;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .ninja_chart_title_pill {
+            background: rgba(255, 255, 255, 0.1);
+            color: #f8fafc;
+        }
+
+        .ninja_popover_menu, .ninja_modal_dialog, .ninja_chatter_drawer, .ninja_ai_copilot_panel, .ninja_custom_date_bar {
+            background: #1e293b;
+            color: #f8fafc;
+            border-color: #334155;
+
+            .dropdown-item, .ninja_menu_item_btn {
+                color: #f8fafc;
+                &:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                }
+            }
+        }
+
+        .ninja_ai_response_box {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+    }
+
+    &.ninja_theme_cyber_dark {
+        background-color: #0d1117;
+    }
+
+    &.ninja_theme_matrix {
+        background-color: #05140b;
+        .ninja_chart_box {
+            background: #092214;
+            border-color: rgba(16, 185, 129, 0.25);
+        }
+    }
+
+    &.ninja_theme_midnight {
+        background-color: #130924;
+        .ninja_chart_box {
+            background: #1d1033;
+            border-color: rgba(168, 85, 247, 0.25);
+        }
+    }
+}
+
+@media print {
+    .ninja_topbar, .ninja_sparkle_btn {
+        display: none !important;
+    }
+}

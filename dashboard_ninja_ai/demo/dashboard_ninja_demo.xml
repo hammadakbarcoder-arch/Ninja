@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo Executive Board -->
+        <record id="demo_board_executive" model="dashboard.ninja.board">
+            <field name="name">Executive Operations &amp; Intelligence</field>
+            <field name="sequence">1</field>
+            <field name="is_public">True</field>
+            <field name="ai_summary">⚡ Ninja AI Briefing: Enterprise telemetry demonstrates steady growth. Key partner acquisitions up by 18% over the preceding period.</field>
+        </record>
+
+        <!-- KPI 1: Global Partner Base -->
+        <record id="demo_item_kpi_partners" model="dashboard.ninja.item">
+            <field name="name">Global Partners &amp; Clients</field>
+            <field name="board_id" ref="demo_board_executive"/>
+            <field name="item_type">kpi</field>
+            <field name="model_id" model="ir.model" search="[('model', '=', 'res.partner')]"/>
+            <field name="aggregate_func">count</field>
+            <field name="theme_color">neon_blue</field>
+            <field name="sequence">1</field>
+            <field name="ai_insight">Customer acquisition steady.</field>
+        </record>
+
+        <!-- KPI 2: Corporate Accounts -->
+        <record id="demo_item_kpi_companies" model="dashboard.ninja.item">
+            <field name="name">Corporate Enterprise Accounts</field>
+            <field name="board_id" ref="demo_board_executive"/>
+            <field name="item_type">kpi</field>
+            <field name="model_id" model="ir.model" search="[('model', '=', 'res.partner')]"/>
+            <field name="domain">[('is_company', '=', True)]</field>
+            <field name="aggregate_func">count</field>
+            <field name="theme_color">neon_green</field>
+            <field name="sequence">2</field>
+            <field name="ai_insight">High-value enterprise segment.</field>
+        </record>
+
+        <!-- KPI 3: System Users -->
+        <record id="demo_item_kpi_users" model="dashboard.ninja.item">
+            <field name="name">Active System Users</field>
+            <field name="board_id" ref="demo_board_executive"/>
+            <field name="item_type">kpi</field>
+            <field name="model_id" model="ir.model" search="[('model', '=', 'res.users')]"/>
+            <field name="aggregate_func">count</field>
+            <field name="theme_color">neon_purple</field>
+            <field name="sequence">3</field>
+            <field name="ai_insight">Full operational capacity.</field>
+        </record>
+
+        <!-- KPI 4: Deployed Apps -->
+        <record id="demo_item_kpi_modules" model="dashboard.ninja.item">
+            <field name="name">Active Applications</field>
+            <field name="board_id" ref="demo_board_executive"/>
+            <field name="item_type">kpi</field>
+            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.module.module')]"/>
+            <field name="domain">[('state', '=', 'installed')]</field>
+            <field name="aggregate_func">count</field>
+            <field name="theme_color">sunset_orange</field>
+            <field name="sequence">4</field>
+        </record>
+
+        <!-- Chart 1: Partner Geography Bar Chart -->
+        <record id="demo_chart_geo" model="dashboard.ninja.item">
+            <field name="name">Client Regional Distribution</field>
+            <field name="board_id" ref="demo_board_executive"/>
+            <field name="item_type">bar</field>
+            <field name="model_id" model="ir.model" search="[('model', '=', 'res.partner')]"/>
+            <field name="aggregate_func">count</field>
+            <field name="field_group_by" model="ir.model.fields" search="[('model', '=', 'res.partner'), ('name', '=', 'country_id')]"/>
+            <field name="theme_color">neon_blue</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <!-- Chart 2: Account Composition Doughnut -->
+        <record id="demo_chart_comp" model="dashboard.ninja.item">
+            <field name="name">Enterprise vs Individual Accounts</field>
+            <field name="board_id" ref="demo_board_executive"/>
+            <field name="item_type">doughnut</field>
+            <field name="model_id" model="ir.model" search="[('model', '=', 'res.partner')]"/>
+            <field name="aggregate_func">count</field>
+            <field name="field_group_by" model="ir.model.fields" search="[('model', '=', 'res.partner'), ('name', '=', 'is_company')]"/>
+            <field name="theme_color">neon_green</field>
+            <field name="sequence">11</field>
+        </record>
+    </data>
+</odoo>

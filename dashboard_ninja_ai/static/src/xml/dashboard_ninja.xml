@@ -1,0 +1,733 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="dashboard_ninja_ai.DashboardMain">
+        <div t-attf-class="ninja_dashboard_container ninja_theme_#{state.currentTheme} #{state.focusMode ? 'ninja_focus_mode' : ''}" t-on-click="() => this.closeOpenDropdowns()">
+            
+            <!-- Top Executive Action Bar (Hammad Akbar All-in-One Edition) -->
+            <div class="ninja_topbar d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                
+                <!-- Left Circular Action Icons + Filter Dropdowns -->
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <!-- 1. Edit / Customize Items -->
+                    <button class="ninja_icon_btn" t-on-click="() => this.editBoardItems()" title="Customize Dashboard Cards &amp; Charts">
+                        <i class="fa fa-pencil-square-o"/>
+                    </button>
+
+                    <!-- 2. Target / Focus Mode -->
+                    <button t-attf-class="ninja_icon_btn #{state.focusMode ? 'active' : ''}" t-on-click="() => this.toggleFocusMode()" title="Toggle Focus / Presentation Mode">
+                        <i class="fa fa-bullseye"/>
+                    </button>
+
+                    <!-- 3. Print Dashboard -->
+                    <button class="ninja_icon_btn" t-on-click="() => this.printDashboard()" title="Print / Save PDF">
+                        <i class="fa fa-print"/>
+                    </button>
+
+                    <!-- 4. Direct Email Briefing -->
+                    <button class="ninja_icon_btn" t-on-click="() => this.openDirectMail()" title="Send Dashboard Summary via Direct Email">
+                        <i class="fa fa-envelope-o"/>
+                    </button>
+
+                    <!-- 5. Chatter & Notes Drawer -->
+                    <button class="ninja_icon_btn position-relative" t-on-click="() => this.toggleChatterDrawer()" title="Open Dashboard Chatter &amp; Team Notes">
+                        <i class="fa fa-bookmark-o"/>
+                        <span t-if="state.chatterCount" class="ninja_mini_badge" t-esc="state.chatterCount"/>
+                    </button>
+
+                    <!-- 6. Camera / Export All Data -->
+                    <button class="ninja_icon_btn" t-on-click="() => this.exportFullDashboardCSV()" title="Export Dashboard Snapshot (CSV)">
+                        <i class="fa fa-camera"/>
+                    </button>
+
+                    <!-- 7. Theme Switcher Dropdown -->
+                    <div class="dropdown position-relative" t-on-click.stop="() => {}">
+                        <button class="ninja_icon_btn" t-on-click.stop="() => this.toggleThemeMenu()" title="Change Dashboard Theme">
+                            <i class="fa fa-sliders"/>
+                        </button>
+                        <div t-if="state.showThemeMenu" class="ninja_popover_menu p-2 rounded-3 shadow-lg position-absolute start-0 mt-2 z-index-dropdown">
+                            <div class="px-2 py-1 text-muted small fw-bold text-uppercase">Select Theme</div>
+                            <button class="dropdown-item rounded py-2 px-3 d-flex align-items-center gap-2" t-on-click="() => this.setTheme('pastel')">
+                                <span class="badge rounded-circle p-1" style="background:#d8cfe8; border:1px solid #7e22ce;"/> 🎨 Pastel Studio (Default)
+                            </button>
+                            <button class="dropdown-item rounded py-2 px-3 d-flex align-items-center gap-2" t-on-click="() => this.setTheme('cyber_dark')">
+                                <span class="badge rounded-circle p-1 bg-dark border border-info"/> 🥷 Cyber Dark
+                            </button>
+                            <button class="dropdown-item rounded py-2 px-3 d-flex align-items-center gap-2" t-on-click="() => this.setTheme('matrix')">
+                                <span class="badge rounded-circle p-1 bg-success"/> 🟢 Neon Matrix
+                            </button>
+                            <button class="dropdown-item rounded py-2 px-3 d-flex align-items-center gap-2" t-on-click="() => this.setTheme('midnight')">
+                                <span class="badge rounded-circle p-1" style="background:#7c3aed;"/> 🟣 Midnight Violet
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 8. More Options / Board Switcher Menu -->
+                    <div class="dropdown position-relative" t-on-click.stop="() => {}">
+                        <button class="ninja_icon_btn" t-on-click.stop="() => this.toggleBoardMenu()" title="Switch or Manage Dashboards">
+                            <i class="fa fa-ellipsis-v"/>
+                        </button>
+                        <div t-if="state.showBoardMenu" class="ninja_popover_menu p-2 rounded-3 shadow-lg position-absolute start-0 mt-2 z-index-dropdown" style="min-width: 240px;">
+                            <div class="px-2 py-1 text-muted small fw-bold text-uppercase d-flex justify-content-between align-items-center">
+                                <span>Active Dashboards</span>
+                                <span class="badge bg-secondary rounded-pill" t-esc="state.allBoards.length + 1"/>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between px-2 py-1 rounded hover-bg">
+                                <button class="btn btn-sm text-start flex-grow-1 text-truncate border-0 p-1 ninja_menu_item_btn" t-on-click="() => this.switchBoard('all')">
+                                    <i t-att-class="state.boardId === 'all' ? 'fa fa-check-circle text-primary me-2' : 'fa fa-globe text-muted me-2'"/>
+                                    <span t-att-class="state.boardId === 'all' ? 'fw-bold' : ''">All Dashboards (All-in-One)</span>
+                                </button>
+                            </div>
+                            <t t-foreach="state.allBoards" t-as="b" t-key="b.id">
+                                <div class="d-flex align-items-center justify-content-between px-2 py-1 rounded hover-bg">
+                                    <button class="btn btn-sm text-start flex-grow-1 text-truncate border-0 p-1 ninja_menu_item_btn" t-on-click="() => this.switchBoard(b.id)">
+                                        <i t-att-class="b.id === state.boardId ? 'fa fa-check-circle text-primary me-2' : 'fa fa-dashboard text-muted me-2'"/>
+                                        <span t-att-class="b.id === state.boardId ? 'fw-bold' : ''" t-esc="b.name"/>
+                                    </button>
+                                    <button t-if="state.allBoards.length &gt; 1" class="btn btn-sm text-danger border-0 p-1" title="Delete Dashboard" t-on-click="(ev) => this.deleteBoard(b.id, ev)">
+                                        <i class="fa fa-trash-o"/>
+                                    </button>
+                                </div>
+                            </t>
+                            <hr class="my-1"/>
+                            <button class="dropdown-item rounded py-1 px-2 small text-primary fw-semibold" t-on-click="() => this.refreshData()">
+                                <i class="fa fa-refresh me-2"/> Refresh Metrics
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Date Filter Select Dropdown -->
+                    <div class="ninja_filter_pill_wrap ms-1">
+                        <select class="form-select form-select-sm ninja_pill_select" t-on-change="(ev) => this.onDateSelectChange(ev)">
+                            <option value="all" t-att-selected="state.dateFilter === 'all'">Date Filter</option>
+                            <option value="today" t-att-selected="state.dateFilter === 'today'">📅 Today</option>
+                            <option value="this_week" t-att-selected="state.dateFilter === 'this_week'">📅 This Week</option>
+                            <option value="this_month" t-att-selected="state.dateFilter === 'this_month'">📅 This Month</option>
+                            <option value="this_year" t-att-selected="state.dateFilter === 'this_year'">📅 This Year</option>
+                            <option value="custom" t-att-selected="state.dateFilter === 'custom'">📆 Custom Range...</option>
+                        </select>
+                    </div>
+
+                    <!-- Quick Domain Filters Dropdown -->
+                    <div class="ninja_filter_pill_wrap">
+                        <select class="form-select form-select-sm ninja_pill_select" t-on-change="(ev) => this.onQuickFilterChange(ev)">
+                            <option value="all" t-att-selected="state.quickFilter === 'all'">🌪️ Filters</option>
+                            <option value="companies" t-att-selected="state.quickFilter === 'companies'">🏢 Corporate Accounts</option>
+                            <option value="individuals" t-att-selected="state.quickFilter === 'individuals'">👤 Individual Accounts</option>
+                            <option value="active" t-att-selected="state.quickFilter === 'active'">✅ Active Records Only</option>
+                        </select>
+                    </div>
+
+                    <!-- Active Board Selector Badge -->
+                    <div class="ninja_filter_pill_wrap">
+                        <select class="form-select form-select-sm ninja_pill_select fw-bold" t-on-change="(ev) => this.onBoardSelectChange(ev)">
+                            <option value="all" t-att-selected="state.boardId === 'all'">
+                                🌐 All Dashboards (All-in-One)
+                            </option>
+                            <t t-foreach="state.allBoards" t-as="b" t-key="b.id">
+                                <option t-att-value="b.id" t-att-selected="b.id === state.boardId">
+                                    📊 <t t-esc="b.name"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Right AI Sparkle, AI Report, Data Upload, PDF Export & Create New Chart Buttons -->
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <!-- Sparkle AI Copilot Trigger -->
+                    <button class="ninja_sparkle_btn" t-on-click="() => this.toggleAIChat()" title="Open AI Copilot, Multi-Language Report Generator &amp; Voice AI">
+                        <i class="fa fa-magic"/>
+                    </button>
+
+                    <!-- AI Report Generator Trigger -->
+                    <button class="ninja_action_pill_btn ninja_ai_gen_btn" t-on-click="() => this.openAIReportStudio()" title="Generate AI Report from Prompt (Multi-Language)">
+                        <i class="fa fa-file-text-o me-1"/> AI Report
+                    </button>
+
+                    <!-- Data Upload (Excel, CSV, PDF) Trigger -->
+                    <button class="ninja_action_pill_btn ninja_create_chart_btn" t-on-click="() => this.openDataUploadStudio()" title="Upload Excel, CSV, or PDF Data for AI Analytics">
+                        <i class="fa fa-cloud-upload me-1"/> Upload Data
+                    </button>
+
+                    <!-- PDF Export Trigger -->
+                    <button class="ninja_action_pill_btn ninja_create_chart_btn" t-on-click="() => this.exportExecutivePDFReport()" title="Download Executive AI Report as PDF">
+                        <i class="fa fa-file-pdf-o text-danger me-1"/> PDF Export
+                    </button>
+
+                    <!-- Generate Dashboard with AI Trigger -->
+                    <button class="ninja_action_pill_btn ninja_ai_gen_btn" t-on-click="() => this.openGenAIModal()" title="Generate Complete Dashboard with AI">
+                        <i class="fa fa-bolt me-1"/> AI Generate
+                    </button>
+
+                    <!-- Create New Chart Button -->
+                    <button class="ninja_action_pill_btn ninja_create_chart_btn" t-on-click="() => this.openCreateChartModal()">
+                        <i class="fa fa-pie-chart me-1"/> Create New Chart
+                    </button>
+                </div>
+            </div>
+
+            <!-- Custom Manual Date Range Popover Bar -->
+            <div t-if="state.showCustomDateBox" class="ninja_custom_date_bar mb-3 p-3 rounded-4 shadow-sm d-flex flex-wrap align-items-end gap-3">
+                <div>
+                    <label class="form-label small fw-bold mb-1">Start Date (From)</label>
+                    <input type="date" class="form-control form-control-sm" t-model="state.dateFrom"/>
+                </div>
+                <div>
+                    <label class="form-label small fw-bold mb-1">End Date (To)</label>
+                    <input type="date" class="form-control form-control-sm" t-model="state.dateTo"/>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-primary rounded-pill px-3" t-on-click="() => this.applyCustomDateRange()">
+                        <i class="fa fa-check me-1"/> Apply Filter
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" t-on-click="() => this.setDateFilter('all')">
+                        Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- AI Copilot, Multi-Language Report Generator, Data Upload & Voice Command Studio -->
+            <div t-if="state.showAIChat" class="ninja_ai_copilot_panel mb-3 p-3 rounded-4 shadow-sm">
+                <!-- Header Row with Mode Tabs, Multi-Language Selector & Export Actions -->
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <span class="badge bg-primary rounded-pill px-3 py-1">
+                            <i class="fa fa-magic me-1"/> Ninja AI Studio
+                        </span>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button t-attf-class="btn #{state.aiStudioTab === 'report' ? 'btn-primary' : 'btn-outline-secondary'}" t-on-click="() => this.setAIStudioTab('report')">
+                                <i class="fa fa-file-text-o me-1"/> AI Report &amp; Analytics
+                            </button>
+                            <button t-attf-class="btn #{state.aiStudioTab === 'upload' ? 'btn-primary' : 'btn-outline-secondary'}" t-on-click="() => this.setAIStudioTab('upload')">
+                                <i class="fa fa-cloud-upload me-1"/> Data Upload (Excel/CSV/PDF)
+                            </button>
+                            <button t-attf-class="btn #{state.aiStudioTab === 'history' ? 'btn-primary' : 'btn-outline-secondary'}" t-on-click="() => this.setAIStudioTab('history')">
+                                <i class="fa fa-history me-1"/> History (<t t-esc="state.reportHistory.length"/>)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <!-- Multi-Language Selector -->
+                        <select class="form-select form-select-sm ninja_pill_select" style="width: auto;" t-model="state.aiLanguage" title="Choose AI Response &amp; Report Language">
+                            <option value="auto">🌐 Auto Detect Language</option>
+                            <option value="en">🇬🇧 English</option>
+                            <option value="ro_ur">🇵🇰 Roman Urdu (اردو/Eng)</option>
+                            <option value="ur">🇵🇰 اردو (Urdu)</option>
+                            <option value="ar">🇸🇦 العربية (Arabic)</option>
+                        </select>
+
+                        <!-- Speak Report (Voice Output) -->
+                        <button class="btn btn-sm btn-outline-primary rounded-pill px-2" t-on-click="() => this.speakCurrentAIReport()" title="Read AI Report Aloud">
+                            <i class="fa fa-volume-up me-1"/> Speak
+                        </button>
+
+                        <!-- PDF Export -->
+                        <button class="btn btn-sm btn-danger rounded-pill px-3 fw-bold" t-on-click="() => this.exportExecutivePDFReport()" title="Download PDF Report">
+                            <i class="fa fa-file-pdf-o me-1"/> PDF Export
+                        </button>
+
+                        <!-- Excel Export -->
+                        <button class="btn btn-sm btn-success rounded-pill px-3 fw-bold" t-on-click="() => this.exportFullDashboardCSV()" title="Download Excel/CSV Report">
+                            <i class="fa fa-file-excel-o me-1"/> Excel Export
+                        </button>
+
+                        <button class="btn btn-sm btn-link text-muted p-0 ms-1" t-on-click="() => this.toggleAIChat()">
+                            <i class="fa fa-times"/>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Prompt Bar with Voice Command Mic + Ask AI + Generate Report -->
+                <div class="input-group input-group-sm mb-2">
+                    <button t-attf-class="btn #{state.voiceListening ? 'btn-danger' : 'btn-outline-secondary'} px-3" t-on-click="() => this.toggleVoiceCommand()" title="Voice Command (Bol kar AI se kaam karwayein)">
+                        <i t-attf-class="fa #{state.voiceListening ? 'fa-microphone-slash fa-spin' : 'fa-microphone'} me-1"/>
+                        <span t-esc="state.voiceListening ? 'Listening...' : 'Voice AI'"/>
+                    </button>
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Type in English, Roman Urdu, or Urdu (e.g., 'Sales aur Revenue ki mukammal report banao' or 'Generate Q4 Sales Report')..."
+                           t-model="state.userPrompt"
+                           t-on-keydown="(ev) => this.onPromptKeyDown(ev)"/>
+                    <button class="btn btn-outline-primary px-3 fw-semibold" t-on-click="() => this.sendAIPrompt()" t-att-disabled="state.aiLoading">
+                        <i class="fa fa-comments-o me-1"/> Ask Chatbot
+                    </button>
+                    <button class="btn btn-primary px-4 fw-bold" t-on-click="() => this.generateStructuredAIReport()" t-att-disabled="state.aiLoading">
+                        <i class="fa fa-file-text me-1"/> Generate AI Report
+                    </button>
+                </div>
+
+                <!-- Quick Multi-Language Prompt Chips -->
+                <div class="d-flex flex-wrap gap-1 mb-3">
+                    <button class="btn btn-xs btn-light border rounded-pill px-2 py-0 small" t-on-click="() => this.runQuickReportPrompt('Sales aur Revenue ki mukammal report aur smart advice banao', 'ro_ur')">
+                        🇵🇰 Sales &amp; Revenue Report (Roman Urdu)
+                    </button>
+                    <button class="btn btn-xs btn-light border rounded-pill px-2 py-0 small" t-on-click="() => this.runQuickReportPrompt('سیلز اور منافع کی مکمل ایگزیکٹو رپورٹ بنائیں', 'ur')">
+                        🇵🇰 مکمل بزنس رپورٹ (اردو)
+                    </button>
+                    <button class="btn btn-xs btn-light border rounded-pill px-2 py-0 small" t-on-click="() => this.runQuickReportPrompt('Generate Executive Financial &amp; KPI Performance Report', 'en')">
+                        🇬🇧 Executive KPI &amp; Financial Report
+                    </button>
+                    <button class="btn btn-xs btn-light border rounded-pill px-2 py-0 small" t-on-click="() => this.runQuickReportPrompt('Give me Auto Summary and 4 Smart Suggestions to boost growth', 'en')">
+                        💡 Auto Summary &amp; Smart Suggestions
+                    </button>
+                </div>
+
+                <!-- TAB 1: AI REPORT GENERATOR, AUTO SUMMARY, ANALYTICS TABLE & SMART SUGGESTIONS -->
+                <t t-if="state.aiStudioTab === 'report'">
+                    <div class="ninja_ai_response_box p-3 rounded-3 mb-2">
+                        <t t-if="state.aiLoading">
+                            <div class="text-primary fw-semibold">
+                                <i class="fa fa-spinner fa-spin me-2"/> Synthesizing Multi-Language AI Executive Report &amp; Deep Analytics...
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="fw-bold mb-1 text-primary">
+                                <i class="fa fa-bolt me-1"/> <t t-esc="(state.currentReport &amp;&amp; state.currentReport.title) || ('AI Executive Briefing — ' + state.boardName)"/>
+                            </div>
+                            <div style="white-space: pre-wrap; font-size: 13.5px;" t-out="state.aiSummary"/>
+                        </t>
+                    </div>
+
+                    <!-- Structured Analytics Table + Smart Suggestions when a Report is active -->
+                    <div t-if="state.currentReport" class="row g-3 mt-1">
+                        <div class="col-12 col-lg-7">
+                            <div class="p-3 rounded-3 bg-white border">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <strong class="small text-uppercase text-muted"><i class="fa fa-table me-1"/> Deep KPI Analytics Breakdown</strong>
+                                    <span class="badge bg-info text-dark" t-esc="state.currentReport.generated_at"/>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-hover align-middle mb-0 small">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Metric</th>
+                                                <th>Actual</th>
+                                                <th>Target</th>
+                                                <th>Achievement</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="state.currentReport.analytics_rows || []" t-as="row" t-key="row_index">
+                                                <tr>
+                                                    <td class="fw-semibold" t-esc="row.name"/>
+                                                    <td class="fw-bold" t-esc="row.value"/>
+                                                    <td class="text-muted" t-esc="row.target"/>
+                                                    <td><span class="badge bg-light text-dark border" t-esc="row.achievement"/></td>
+                                                    <td>
+                                                        <span t-attf-class="badge #{row.status === 'Exceeded' ? 'bg-success' : (row.status === 'On Track' ? 'bg-primary' : 'bg-warning text-dark')}" t-esc="row.status"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-5">
+                            <div class="p-3 rounded-3 bg-white border h-100">
+                                <strong class="small text-uppercase text-muted d-block mb-2">
+                                    <i class="fa fa-lightbulb-o text-warning me-1"/> AI Smart Suggestions &amp; Advice
+                                </strong>
+                                <ul class="list-unstyled small mb-0">
+                                    <t t-foreach="state.currentReport.smart_suggestions || []" t-as="sug" t-key="sug_index">
+                                        <li class="mb-2 pb-1 border-bottom" t-esc="sug"/>
+                                    </t>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <!-- TAB 2: DATA UPLOAD (EXCEL, CSV, PDF, JSON) & INSTANT CHART BUILDER -->
+                <t t-if="state.aiStudioTab === 'upload'">
+                    <div class="p-3 rounded-3 bg-white border">
+                        <div class="row g-3 align-items-center">
+                            <div class="col-12 col-md-6">
+                                <h6 class="fw-bold mb-1"><i class="fa fa-cloud-upload text-primary me-2"/>Upload Excel (.xlsx/.xls), CSV, PDF, or JSON</h6>
+                                <p class="text-muted small mb-2">
+                                    Upload any external spreadsheet or report. Ninja AI will automatically analyze rows, compute totals/averages, and plot an interactive chart on your dashboard!
+                                </p>
+                                <div class="d-flex flex-wrap gap-2 align-items-center">
+                                    <input type="file" class="form-control form-control-sm" style="max-width: 280px;" accept=".csv,.xlsx,.xls,.pdf,.json,.txt" t-on-change="(ev) => this.onDataFileSelected(ev)"/>
+                                    <button class="btn btn-sm btn-outline-secondary" t-on-click="() => this.loadSampleUploadData()">
+                                        <i class="fa fa-flask me-1"/> Try Sample Excel/CSV Data
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6" t-if="state.uploadedAnalysis">
+                                <div class="p-3 rounded-3" style="background: #f0fdf4; border: 1px solid #86efac;">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <strong class="text-success small"><i class="fa fa-check-circle me-1"/> <t t-esc="state.uploadedAnalysis.filename"/></strong>
+                                        <span class="badge bg-success"><t t-esc="state.uploadedAnalysis.row_count"/> Rows Analyzed</span>
+                                    </div>
+                                    <div class="small text-dark mb-2" t-esc="state.uploadedAnalysis.summary"/>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-xs btn-success btn-sm rounded-pill px-3" t-on-click="() => this.addUploadedDataAsChart('bar')">
+                                            <i class="fa fa-bar-chart me-1"/> Add as Bar Chart
+                                        </button>
+                                        <button class="btn btn-xs btn-primary btn-sm rounded-pill px-3" t-on-click="() => this.addUploadedDataAsChart('doughnut')">
+                                            <i class="fa fa-pie-chart me-1"/> Add as Doughnut Chart
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <!-- TAB 3: AI REPORTS HISTORY -->
+                <t t-if="state.aiStudioTab === 'history'">
+                    <div class="p-3 rounded-3 bg-white border">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong class="small text-uppercase text-muted"><i class="fa fa-history me-1"/> Generated AI Reports &amp; Analysis History</strong>
+                            <button t-if="state.reportHistory.length" class="btn btn-xs btn-outline-danger btn-sm py-0" t-on-click="() => this.clearReportHistory()">
+                                Clear History
+                            </button>
+                        </div>
+                        <t t-if="!state.reportHistory.length">
+                            <div class="text-muted small py-2">No reports in history yet. Click <strong>Generate AI Report</strong> above to create your first report!</div>
+                        </t>
+                        <div class="list-group list-group-flush small">
+                            <t t-foreach="state.reportHistory" t-as="hist" t-key="hist.id">
+                                <div class="list-group-item d-flex justify-content-between align-items-center px-2 py-2">
+                                    <div>
+                                        <div class="fw-bold text-primary" t-esc="hist.title"/>
+                                        <div class="text-muted" style="font-size: 11px;">
+                                            <span class="me-2"><i class="fa fa-clock-o me-1"/><t t-esc="hist.generated_at"/></span>
+                                            <span>Prompt: "<t t-esc="hist.prompt"/>"</span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-primary py-0 px-2" t-on-click="() => this.openHistoryReport(hist)">
+                                            View Report
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger py-0 px-2" t-on-click="() => this.exportExecutivePDFReport(hist)">
+                                            <i class="fa fa-file-pdf-o"/> PDF
+                                        </button>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+
+            <!-- ROW 1: 6 SIGNATURE PASTEL KPI CARDS (Exact Match to Reference Image) -->
+            <div class="ninja_kpi_row mb-3">
+                <t t-foreach="state.kpis" t-as="kpi" t-key="kpi.id">
+                    <t t-set="cardStyleIdx" t-value="kpi_index % 6"/>
+
+                    <!-- Card Style 0: Soft Rose Pink (Icon Square + Bold Value + Label) -->
+                    <div t-if="cardStyleIdx === 0" class="ninja_kpi_tile ninja_tile_rose" t-on-click="() => this.onCardClick(kpi)" title="Click to drill down into Odoo records">
+                        <div class="ninja_tile_icon_square">
+                            <i class="fa fa-bar-chart"/>
+                        </div>
+                        <div class="mt-auto">
+                            <div class="ninja_tile_big_val"><t t-esc="this.formatKpiValue(kpi)"/></div>
+                            <div class="ninja_tile_label"><t t-esc="kpi.name"/></div>
+                        </div>
+                    </div>
+
+                    <!-- Card Style 1: Soft Lavender (Top Pink Pill + Bottom Title + Corner Tag Icon) -->
+                    <div t-elif="cardStyleIdx === 1" class="ninja_kpi_tile ninja_tile_lavender" t-on-click="() => this.onCardClick(kpi)" title="Click to drill down into Odoo records">
+                        <div>
+                            <span class="ninja_pink_value_pill"><t t-esc="this.formatCompactValue(kpi.value)"/></span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-end mt-auto">
+                            <div class="ninja_tile_label_bold"><t t-esc="kpi.name"/></div>
+                            <div class="ninja_circle_badge">
+                                <i class="fa fa-tag"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Style 2: Soft Sand Beige (Top Metric + Bottom White Sub-Card with Icon) -->
+                    <div t-elif="cardStyleIdx === 2" class="ninja_kpi_tile ninja_tile_sand p-0 overflow-hidden" t-on-click="() => this.onCardClick(kpi)" title="Click to drill down into Odoo records">
+                        <div class="p-3">
+                            <div class="ninja_tile_med_val"><t t-esc="this.formatCompactValue(kpi.value)"/></div>
+                            <div class="ninja_tile_label"><t t-esc="kpi.name"/></div>
+                        </div>
+                        <div class="ninja_sand_bottom_box mt-auto d-flex align-items-center justify-content-center">
+                            <div class="ninja_tile_icon_square sm">
+                                <i class="fa fa-bar-chart"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Style 3: Wide Ice Blue Card (Tag Icon + Value + Vs Target Progress Bar) -->
+                    <div t-elif="cardStyleIdx === 3" class="ninja_kpi_tile ninja_tile_ice ninja_tile_wide" t-on-click="() => this.onCardClick(kpi)" title="Click to drill down into Odoo records">
+                        <div class="ninja_circle_badge mb-2">
+                            <i class="fa fa-tag"/>
+                        </div>
+                        <div class="ninja_tile_med_val"><t t-esc="this.formatCompactValue(kpi.value)"/></div>
+                        <div class="ninja_tile_label mb-2"><t t-esc="kpi.name"/></div>
+                        <div class="d-flex align-items-center gap-2 mt-auto pt-1">
+                            <span class="ninja_vs_target_tag">Vs Target</span>
+                            <div class="progress flex-grow-1" style="height: 5px; background: rgba(71, 85, 105, 0.2);">
+                                <div class="progress-bar" role="progressbar" t-attf-style="width: #{kpi.target_progress || 65}%; background-color: #3b5998;"/>
+                            </div>
+                            <span class="ninja_target_pct"><t t-esc="kpi.target_progress || 8"/>%</span>
+                        </div>
+                    </div>
+
+                    <!-- Card Style 4: Soft Sage Green (Chart Icon + Value + Vs Target Pill) -->
+                    <div t-elif="cardStyleIdx === 4" class="ninja_kpi_tile ninja_tile_sage" t-on-click="() => this.onCardClick(kpi)" title="Click to drill down into Odoo records">
+                        <div class="ninja_circle_badge mb-2">
+                            <i class="fa fa-bar-chart"/>
+                        </div>
+                        <div class="ninja_tile_med_val"><t t-esc="this.formatKpiValue(kpi)"/></div>
+                        <div class="ninja_tile_label mb-2"><t t-esc="kpi.name"/></div>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <span class="ninja_vs_target_tag">Vs Target</span>
+                            <span class="ninja_pink_mini_pill">+<t t-esc="kpi.growth_rate || 24"/>%</span>
+                        </div>
+                    </div>
+
+                    <!-- Card Style 5: Soft Sky Blue (User+ Icon + Highlighted % + Label) -->
+                    <div t-else="" class="ninja_kpi_tile ninja_tile_sky" t-on-click="() => this.onCardClick(kpi)" title="Click to drill down into Odoo records">
+                        <div class="ninja_circle_badge mb-2">
+                            <i class="fa fa-user-plus"/>
+                        </div>
+                        <div class="mt-auto">
+                            <div class="ninja_sky_pct_val"><t t-esc="kpi.growth_rate || 39"/>%</div>
+                            <div class="ninja_tile_label"><t t-esc="kpi.name"/></div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+
+            <!-- ROW 2 & ROW 3: 6 SIGNATURE CHARTS IN 3-COLUMN GRID -->
+            <div class="row g-3">
+                <t t-foreach="state.charts" t-as="chart" t-key="chart.id">
+                    <div class="col-12 col-md-6 col-xl-4">
+                        <div t-attf-class="ninja_chart_box p-3 rounded-4 h-100 d-flex flex-column position-relative #{state.activeChartMenu === chart.id ? 'ninja_menu_open' : ''}">
+                            <!-- Card Header with White Title Pill & Action Menu -->
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="ninja_chart_title_pill"><t t-esc="chart.name"/></span>
+                                <div class="position-relative" t-on-click.stop="() => {}">
+                                    <button class="ninja_chart_opt_btn" title="Export Chart" t-on-click.stop="() => this.toggleChartMenu(chart.id)">
+                                        <i class="fa fa-ellipsis-h"/>
+                                    </button>
+                                    <div t-if="state.activeChartMenu === chart.id" class="ninja_popover_menu p-2 rounded-3 shadow-lg position-absolute end-0 top-100 mt-1 z-index-dropdown" style="min-width: 190px;">
+                                        <button class="dropdown-item rounded py-1 px-2 small d-flex align-items-center gap-2 fw-bold text-primary" t-on-click="() => this.explainChartWithAI(chart)">
+                                            <i class="fa fa-magic text-warning"/> Explain Chart with AI
+                                        </button>
+                                        <button class="dropdown-item rounded py-1 px-2 small d-flex align-items-center gap-2" t-on-click="() => this.cycleChartLayout(chart)">
+                                            <i class="fa fa-exchange text-info"/> Switch Chart Layout
+                                        </button>
+                                        <hr class="my-1"/>
+                                        <button t-if="chart.type !== 'funnel'" class="dropdown-item rounded py-1 px-2 small d-flex align-items-center gap-2" t-on-click="() => this.downloadChartImage(chart)">
+                                            <i class="fa fa-file-image-o text-primary"/> Download PNG
+                                        </button>
+                                        <button class="dropdown-item rounded py-1 px-2 small d-flex align-items-center gap-2" t-on-click="() => this.exportChartCSV(chart)">
+                                            <i class="fa fa-file-excel-o text-success"/> Export CSV
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Funnel Chart (Custom 3D Beveled SVG Funnel matching 'Campaign Data') -->
+                            <t t-if="chart.type === 'funnel'">
+                                <div class="ninja_funnel_wrapper flex-grow-1 d-flex flex-column justify-content-center align-items-center py-2">
+                                    <svg viewBox="0 0 360 220" class="w-100 h-100" style="max-height: 230px;">
+                                        <!-- Stage 1: Top Navy Bar -->
+                                        <rect x="10" y="10" width="340" height="30" fill="#1e293b" rx="2"/>
+                                        <polygon points="10,40 350,40 305,56 55,56" fill="#94a3b8"/>
+                                        <text x="180" y="30" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">
+                                            <t t-esc="(chart.labels &amp;&amp; chart.labels[0]) || 'Total Impressions'"/> (<t t-esc="(chart.values &amp;&amp; chart.values[0]) || 100"/>)
+                                        </text>
+
+                                        <!-- Stage 2: Deep Maroon Bar -->
+                                        <rect x="55" y="56" width="250" height="32" fill="#7f1d1d"/>
+                                        <polygon points="55,88 305,88 265,104 95,104" fill="#94a3b8"/>
+                                        <text x="180" y="76" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">
+                                            <t t-esc="(chart.labels &amp;&amp; chart.labels[1]) || 'Qualified Prospects'"/> (<t t-esc="(chart.values &amp;&amp; chart.values[1]) || 75"/>)
+                                        </text>
+
+                                        <!-- Stage 3: Crimson Red Bar -->
+                                        <rect x="95" y="104" width="170" height="32" fill="#b91c1c"/>
+                                        <polygon points="95,136 265,136 225,152 135,152" fill="#94a3b8"/>
+                                        <text x="180" y="124" fill="#ffffff" font-size="10.5" font-weight="bold" text-anchor="middle">
+                                            <t t-esc="(chart.labels &amp;&amp; chart.labels[2]) || 'Active Proposals'"/> (<t t-esc="(chart.values &amp;&amp; chart.values[2]) || 48"/>)
+                                        </text>
+
+                                        <!-- Stage 4: Coral Red Spout -->
+                                        <rect x="155" y="152" width="50" height="52" fill="#ef4444"/>
+                                        <text x="180" y="182" fill="#ffffff" font-size="10" font-weight="bold" text-anchor="middle">
+                                            <t t-esc="(chart.values &amp;&amp; chart.values[3]) || 24"/>
+                                        </text>
+                                    </svg>
+                                </div>
+                            </t>
+
+                            <!-- Standard Chart.js Canvas (Bar, Doughnut, Line, Radar, Pie) -->
+                            <t t-else="">
+                                <div class="chart_canvas_wrapper position-relative flex-grow-1" style="height: 245px; width: 100%;">
+                                    <canvas t-att-id="'ninja_canvas_' + chart.id" style="width: 100% !important; height: 100% !important;"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+
+            <!-- MODAL 1: Create New Chart / KPI Modal -->
+            <div t-if="state.showCreateChartModal" class="ninja_modal_backdrop d-flex align-items-center justify-content-center">
+                <div class="ninja_modal_dialog p-4 rounded-4 shadow-lg" style="max-width: 480px; width: 100%;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0">
+                            <i class="fa fa-pie-chart text-primary me-2"/> Create New Chart or KPI Tile
+                        </h5>
+                        <button class="btn-close" t-on-click="() => this.closeCreateChartModal()"/>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Chart / Metric Title</label>
+                        <input type="text" class="form-control" placeholder="e.g. Monthly Sales Velocity" t-model="state.newChart.name"/>
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold">Visual Type</label>
+                            <select class="form-select" t-model="state.newChart.item_type">
+                                <option value="bar">📊 Bar Chart</option>
+                                <option value="doughnut">🍩 Doughnut Chart</option>
+                                <option value="line">📈 Line Chart</option>
+                                <option value="radar">🕸️ Radar Chart</option>
+                                <option value="funnel">🔻 Funnel Chart</option>
+                                <option value="pie">🥧 Pie Chart</option>
+                                <option value="kpi">🔢 KPI Metric Tile</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold">Odoo Data Source</label>
+                            <select class="form-select" t-model="state.newChart.model_name">
+                                <option value="res.partner">Customers &amp; Partners</option>
+                                <option value="account.move">Invoices &amp; Accounting</option>
+                                <option value="sale.order">Sales Orders</option>
+                                <option value="ir.module.module">Enterprise Modules</option>
+                                <option value="res.users">System Users</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold">Aggregation</label>
+                            <select class="form-select" t-model="state.newChart.aggregate_func">
+                                <option value="count">Count Records</option>
+                                <option value="sum">Sum of Totals</option>
+                                <option value="avg">Average Value</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold">Target Goal</label>
+                            <input type="number" class="form-control" t-model="state.newChart.target_value"/>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button class="btn btn-light rounded-pill px-4" t-on-click="() => this.closeCreateChartModal()">Cancel</button>
+                        <button class="btn btn-primary rounded-pill px-4 fw-bold" t-on-click="() => this.submitCreateChart()" t-att-disabled="state.creatingChart">
+                            <i class="fa fa-plus-circle me-1"/> Add to Dashboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL 2: Gen-AI Dashboard Template Generator -->
+            <div t-if="state.showGenAIModal" class="ninja_modal_backdrop d-flex align-items-center justify-content-center">
+                <div class="ninja_modal_dialog p-4 rounded-4 shadow-lg" style="max-width: 480px; width: 100%;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0">
+                            <i class="fa fa-magic text-warning me-2"/> Generate Dashboard with AI
+                        </h5>
+                        <button class="btn-close" t-on-click="() => this.closeGenAIModal()"/>
+                    </div>
+                    <p class="text-muted small">Generate or update an executive dashboard without creating duplicates.</p>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Choose Business Domain</label>
+                        <select class="form-select mb-3" t-model="state.selectedTemplate">
+                            <option value="All">🌐 All-in-One Complete Dashboard</option>
+                            <option value="Sales">📊 Sales &amp; Revenue Overview</option>
+                            <option value="Finance">💰 Invoicing &amp; Accounts Receivable</option>
+                            <option value="CRM">🤝 CRM &amp; Lead Conversion</option>
+                            <option value="Operations">⚙️ Operations &amp; Projects Overview</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Custom AI Focus Prompt (Optional)</label>
+                        <input type="text" class="form-control" placeholder="e.g. Focus on top enterprise revenue accounts..." t-model="state.aiCustomPrompt"/>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button class="btn btn-light rounded-pill px-4" t-on-click="() => this.closeGenAIModal()">Cancel</button>
+                        <button class="btn btn-primary rounded-pill px-4 fw-bold" t-on-click="() => this.runAIGeneration()" t-att-disabled="state.aiGenerating">
+                            <t t-if="state.aiGenerating">
+                                <i class="fa fa-spinner fa-spin me-2"/> Synthesizing...
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-bolt me-2"/> Build Dashboard Now
+                            </t>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide-Out Chatter & Discussion Drawer -->
+            <div t-if="state.showChatter" class="ninja_chatter_overlay" t-on-click.self="() => this.toggleChatterDrawer()">
+                <div class="ninja_chatter_drawer p-4 shadow-lg d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                        <div>
+                            <h5 class="fw-bold mb-0">
+                                <i class="fa fa-comments text-primary me-2"/> Dashboard Chatter
+                            </h5>
+                            <span class="text-muted small">Audit Trail &amp; Team Notes (<t t-esc="state.boardName"/>)</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-primary rounded-pill px-3" t-on-click="() => this.openFullChatterView()">
+                                <i class="fa fa-external-link me-1"/> Full Thread
+                            </button>
+                            <button class="btn-close" t-on-click="() => this.toggleChatterDrawer()"/>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 p-3 rounded-3 bg-light border">
+                        <label class="form-label small fw-bold">Post a comment or executive note:</label>
+                        <textarea class="form-control mb-2" rows="2" placeholder="Write an update or note..." t-model="state.newChatterText"/>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-sm btn-primary px-3 rounded-pill" t-on-click="() => this.sendChatterMessage()" t-att-disabled="state.chatterPosting || !state.newChatterText">
+                                <i class="fa fa-paper-plane me-1"/> Post Note
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex-grow-1 overflow-auto pe-1">
+                        <t t-if="state.chatterMessages.length">
+                            <t t-foreach="state.chatterMessages" t-as="msg" t-key="msg.id">
+                                <div class="p-3 rounded-3 mb-2 border bg-white shadow-xs">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <strong class="small"><t t-esc="msg.author"/></strong>
+                                        <span class="text-muted" style="font-size: 11px;" t-esc="msg.date"/>
+                                    </div>
+                                    <div class="small text-secondary" t-out="msg.body"/>
+                                </div>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <div class="text-center py-5 text-muted">
+                                <i class="fa fa-comment-o fa-2x mb-2"/>
+                                <p class="small mb-0">No notes yet. Post the first update above.</p>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </t>
+</templates>
