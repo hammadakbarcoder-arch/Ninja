@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Dashboard Ninja with AGI',
-    'version': '19.0.4.1.0',
+    'version': '19.0.1.0.0',
     'category': 'Productivity/Dashboards',
     'summary': 'All-in-One AI Dashboard, Multi-Language AI Report Generator, Excel/PDF Upload & 6+ Chart Types (First 10 Buyers: $149 + FREE Custom Feature | Regular: $210)',
     'description': """
