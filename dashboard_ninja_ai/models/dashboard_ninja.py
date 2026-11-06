@@ -248,13 +248,37 @@ class DashboardNinjaBoard(models.Model):
             self.create_default_starter_items(board)
             is_all_mode = True
 
-        # Ensure domain-specific boards (Sales, Finance, CRM, Operations) have their own dedicated items
+        # Ensure domain-specific boards (Sales, Finance, Inventory, CRM, Website, Operations) have their own dedicated items
         # instead of showing all 12 generic items when selected individually
         if not is_all_mode and board.name:
             bname_low = board.name.strip().lower()
-            if any(k in bname_low for k in ['sale', 'finance', 'invoice', 'crm', 'operation']) and len(board.item_ids) >= 10:
+            if any(k in bname_low for k in ['sale', 'finance', 'invoice', 'account', 'inventory', 'stock', 'crm', 'website', 'ecommerce', 'operation']) and len(board.item_ids) >= 10:
                 board.item_ids.with_context(tracking_disable=True).unlink()
                 self._seed_domain_specific_items(board, bname_low)
+
+        # Auto-seed the 5 Pre-Built Odoo App Dashboards (Sales, Finance/Account, Inventory, CRM, Website) if missing
+        prebuilt_titles = [
+            'Sales Dashboard',
+            'Finance Dashboard',
+            'Inventory Dashboard',
+            'CRM Dashboard',
+            'Website Dashboard',
+            'Operations Dashboard',
+        ]
+        existing_names_low = {
+            b.name.strip().lower()
+            for b in self.search(['|', ('is_public', '=', True), ('user_id', '=', self.env.user.id)])
+            if b.name
+        }
+        for ptitle in prebuilt_titles:
+            if ptitle.lower() not in existing_names_low:
+                new_b = self.with_context(
+                    tracking_disable=True,
+                    mail_create_nosubscribe=True,
+                    mail_create_nolog=True,
+                ).create({'name': ptitle, 'is_public': True, 'user_id': self.env.user.id})
+                self._seed_domain_specific_items(new_b, ptitle.lower())
+                existing_names_low.add(ptitle.lower())
 
         items_data = []
         for item in board.item_ids:
@@ -828,6 +852,171 @@ class DashboardNinjaBoard(models.Model):
                     'aggregate_func': 'count',
                     'field_group_by': company_field.id if company_field else (country_field.id if country_field else False),
                     'theme_color': 'neon_purple',
+                    'sequence': 12,
+                },
+            ]
+        elif any(k in domain_key for k in ['inventory', 'stock', 'warehouse', 'manufacturing', 'logistics']) and partner_model:
+            # --- INVENTORY & WAREHOUSE DASHBOARD (4 KPIs + 3 Inventory Charts) ---
+            op_mod = module_model or partner_model
+            items_vals = [
+                {
+                    'name': 'Active Warehouse SKUs & Modules',
+                    'board_id': board.id,
+                    'item_type': 'kpi',
+                    'model_id': op_mod.id,
+                    'domain': "[('state', '=', 'installed')]" if module_model else "[]",
+                    'aggregate_func': 'count',
+                    'theme_color': 'pastel_rose',
+                    'target_value': 100.0,
+                    'growth_rate': 21.5,
+                    'sequence': 1,
+                },
+                {
+                    'name': 'Verified Supply Partners',
+                    'board_id': board.id,
+                    'item_type': 'kpi',
+                    'model_id': partner_model.id,
+                    'domain': "[('is_company', '=', True)]",
+                    'aggregate_func': 'count',
+                    'theme_color': 'pastel_sand',
+                    'target_value': 25.0,
+                    'growth_rate': 14.8,
+                    'sequence': 2,
+                },
+                {
+                    'name': 'Stock Locations & Contacts',
+                    'board_id': board.id,
+                    'item_type': 'kpi',
+                    'model_id': partner_model.id,
+                    'aggregate_func': 'count',
+                    'theme_color': 'pastel_sage',
+                    'target_value': 40.0,
+                    'growth_rate': 17.2,
+                    'sequence': 3,
+                },
+                {
+                    'name': 'Inventory Fulfillment vs Target',
+                    'board_id': board.id,
+                    'item_type': 'kpi',
+                    'model_id': op_mod.id,
+                    'domain': "[('state', '=', 'installed')]" if module_model else "[]",
+                    'aggregate_func': 'count',
+                    'theme_color': 'pastel_ice',
+                    'target_value': 85.0,
+                    'growth_rate': 29.0,
+                    'show_progress': True,
+                    'sequence': 4,
+                },
+                {
+                    'name': 'Stock & Moves by Region',
+                    'board_id': board.id,
+                    'item_type': 'bar',
+                    'model_id': partner_model.id,
+                    'aggregate_func': 'count',
+                    'field_group_by': country_field.id if country_field else False,
+                    'theme_color': 'neon_blue',
+                    'sequence': 10,
+                },
+                {
+                    'name': 'Warehouse Category Distribution',
+                    'board_id': board.id,
+                    'item_type': 'doughnut',
+                    'model_id': partner_model.id,
+                    'aggregate_func': 'count',
+                    'field_group_by': company_field.id if company_field else (country_field.id if country_field else False),
+                    'theme_color': 'neon_purple',
+                    'sequence': 11,
+                },
+                {
+                    'name': 'Replenishment & Stock Pipeline',
+                    'board_id': board.id,
+                    'item_type': 'funnel',
+                    'model_id': op_mod.id,
+                    'aggregate_func': 'count',
+                    'field_group_by': state_field.id if state_field else (country_field.id if country_field else False),
+                    'theme_color': 'neon_green',
+                    'sequence': 12,
+                },
+            ]
+        elif any(k in domain_key for k in ['website', 'ecommerce', 'retail', 'media']) and partner_model:
+            # --- WEBSITE & ECOMMERCE DASHBOARD (4 KPIs + 3 Website Charts) ---
+            usr_mod = user_model or partner_model
+            items_vals = [
+                {
+                    'name': 'Online Visitors & Accounts',
+                    'board_id': board.id,
+                    'item_type': 'kpi',
+                    'model_id': partner_model.id,
+                    'aggregate_func': 'count',
+                    'theme_color': 'pastel_sage',
+                    'target_value': 50.0,
+                    'growth_rate': 36.4,
+                    'sequence': 1,
+                },
+                {
+                    'name': 'Registered Portal Users',
+                    'board_id': board.id,
+                    'item_type': 'kpi',
+                    'model_id': usr_mod.id,
+                    'aggregate_func': 'count',
+                    'theme_color': 'pastel_sky',
+                    'target_value': 15.0,
+                    'growth_rate': 24.0,
+                    'sequence': 2,
+                },
+                {
+                    'name': 'eCommerce Revenue ($)',
+                    'board_id': board.id,
+                    'item_type': 'kpi',
+                    'model_id': rev_model.id,
+                    'domain': rev_domain,
+                    'aggregate_func': 'sum' if rev_amt_field else 'count',
+                    'field_aggregate': rev_amt_field.id if rev_amt_field else False,
+                    'theme_color': 'pastel_lavender',
+                    'target_value': 100000.0 if rev_amt_field else 30.0,
+                    'growth_rate': 31.8,
+                    'sequence': 3,
+                },
+                {
+                    'name': 'Website Conversion vs Target',
+                    'board_id': board.id,
+                    'item_type': 'kpi',
+                    'model_id': partner_model.id,
+                    'aggregate_func': 'count',
+                    'theme_color': 'pastel_ice',
+                    'target_value': 35.0,
+                    'growth_rate': 27.5,
+                    'show_progress': True,
+                    'sequence': 4,
+                },
+                {
+                    'name': 'Visitor Insights (Online vs Offline)',
+                    'board_id': board.id,
+                    'item_type': 'bar',
+                    'model_id': partner_model.id,
+                    'aggregate_func': 'count',
+                    'field_group_by': country_field.id if country_field else False,
+                    'theme_color': 'neon_blue',
+                    'sequence': 10,
+                },
+                {
+                    'name': 'Traffic & Channel Share',
+                    'board_id': board.id,
+                    'item_type': 'pie',
+                    'model_id': partner_model.id,
+                    'aggregate_func': 'count',
+                    'field_group_by': country_field.id if country_field else False,
+                    'theme_color': 'neon_purple',
+                    'sequence': 11,
+                },
+                {
+                    'name': 'Customer Retention Curve',
+                    'board_id': board.id,
+                    'item_type': 'line',
+                    'model_id': partner_model.id,
+                    'aggregate_func': 'count',
+                    'field_group_by': country_field.id if country_field else False,
+                    'theme_color': 'neon_green',
                     'sequence': 12,
                 },
             ]

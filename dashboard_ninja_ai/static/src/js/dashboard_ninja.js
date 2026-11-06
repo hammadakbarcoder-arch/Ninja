@@ -70,9 +70,21 @@ export class DashboardNinjaMain extends Component {
         this.speakCurrentAIReport = this.speakCurrentAIReport.bind(this);
         this.openHistoryReport = this.openHistoryReport.bind(this);
         this.clearReportHistory = this.clearReportHistory.bind(this);
+        this.setSegmentPalette = this.setSegmentPalette.bind(this);
+        this.toggleBookmarkCurrentBoard = this.toggleBookmarkCurrentBoard.bind(this);
+        this.isBoardBookmarked = this.isBoardBookmarked.bind(this);
+        this.toggleOverviewModal = this.toggleOverviewModal.bind(this);
+        this.launchIndustryBoard = this.launchIndustryBoard.bind(this);
 
         // Default to the Hammad Akbar Pastel Studio look
         const savedTheme = localStorage.getItem("ninja_dashboard_theme_v2") || "pastel";
+        const savedPalette = localStorage.getItem("ninja_segment_palette_v1") || "default";
+        let savedBookmarks = [];
+        try {
+            savedBookmarks = JSON.parse(localStorage.getItem("ninja_bookmarked_boards_v1") || '["all"]');
+        } catch (_e) {
+            savedBookmarks = ["all"];
+        }
         let savedHistory = [];
         try {
             savedHistory = JSON.parse(localStorage.getItem("ninja_ai_report_history_v1") || "[]");
@@ -119,6 +131,9 @@ export class DashboardNinjaMain extends Component {
                 target_value: 100,
             },
             currentTheme: savedTheme,
+            segmentPalette: savedPalette,
+            bookmarkedBoards: savedBookmarks,
+            showOverviewModal: false,
             showThemeMenu: false,
             showChatter: false,
             chatterMessages: [],
@@ -275,6 +290,32 @@ export class DashboardNinjaMain extends Component {
             }));
             return { kpis, charts };
         }
+        if (bname.includes("inventory") || bname.includes("stock") || bname.includes("warehouse") || bname.includes("manufacturing") || bname.includes("logistics")) {
+            const kpis = [rawKpis[4] || rawKpis[0], rawKpis[1] || rawKpis[0], rawKpis[2] || rawKpis[0], rawKpis[3] || rawKpis[0]]
+                .filter(Boolean)
+                .map((k, idx) => ({
+                    ...k,
+                    name: ["Active Warehouse SKUs & Modules", "Verified Supply Partners", "Stock Locations & Contacts", "Inventory Fulfillment vs Target"][idx] || k.name,
+                }));
+            const charts = rawCharts.filter((c) => ["bar", "doughnut", "funnel"].includes(c.type)).slice(0, 3).map((c, idx) => ({
+                ...c,
+                name: ["Stock & Moves by Region", "Warehouse Category Distribution", "Replenishment & Stock Pipeline"][idx] || c.name,
+            }));
+            return { kpis, charts };
+        }
+        if (bname.includes("website") || bname.includes("ecommerce") || bname.includes("retail") || bname.includes("media")) {
+            const kpis = [rawKpis[2] || rawKpis[0], rawKpis[5] || rawKpis[1], rawKpis[0], rawKpis[3] || rawKpis[0]]
+                .filter(Boolean)
+                .map((k, idx) => ({
+                    ...k,
+                    name: ["Online Visitors & Accounts", "Registered Portal Users", "eCommerce Revenue ($)", "Website Conversion vs Target"][idx] || k.name,
+                }));
+            const charts = rawCharts.filter((c) => ["bar", "pie", "line"].includes(c.type)).slice(0, 3).map((c, idx) => ({
+                ...c,
+                name: ["Visitor Insights (Online vs Offline)", "Traffic & Channel Share", "Customer Retention Curve"][idx] || c.name,
+            }));
+            return { kpis, charts };
+        }
         if (bname.includes("operation")) {
             const kpis = [rawKpis[4] || rawKpis[0], rawKpis[5] || rawKpis[1], rawKpis[2] || rawKpis[0], rawKpis[3] || rawKpis[0]]
                 .filter(Boolean)
@@ -381,6 +422,46 @@ export class DashboardNinjaMain extends Component {
         this.state.showThemeMenu = false;
         localStorage.setItem("ninja_dashboard_theme_v2", themeName);
         setTimeout(() => this.renderAllCharts(), 80);
+    }
+
+    setSegmentPalette(paletteName) {
+        this.state.segmentPalette = paletteName;
+        this.state.showThemeMenu = false;
+        this.state.activeChartMenu = null;
+        localStorage.setItem("ninja_segment_palette_v1", paletteName);
+        this.notification.add(`🌈 Custom Segment Coloring switched to "${paletteName.toUpperCase()}"`, { type: "info" });
+        setTimeout(() => this.renderAllCharts(), 80);
+    }
+
+    isBoardBookmarked(boardId) {
+        const key = String(boardId);
+        return (this.state.bookmarkedBoards || []).includes(key);
+    }
+
+    toggleBookmarkCurrentBoard() {
+        const key = String(this.state.boardId || "all");
+        const list = [...(this.state.bookmarkedBoards || [])];
+        const idx = list.indexOf(key);
+        if (idx >= 0) {
+            list.splice(idx, 1);
+            this.notification.add(`Removed "${this.state.boardName}" from Bookmarked Dashboards`, { type: "info" });
+        } else {
+            list.push(key);
+            this.notification.add(`🔖 Bookmarked "${this.state.boardName}" for quick access!`, { type: "success" });
+        }
+        this.state.bookmarkedBoards = list;
+        localStorage.setItem("ninja_bookmarked_boards_v1", JSON.stringify(list));
+    }
+
+    toggleOverviewModal() {
+        this.state.showOverviewModal = !this.state.showOverviewModal;
+    }
+
+    async launchIndustryBoard(templateName) {
+        this.state.showOverviewModal = false;
+        this.state.selectedTemplate = templateName;
+        this.state.aiCustomPrompt = `Generate tailored KPIs & analytics for ${templateName}`;
+        await this.runAIGeneration();
     }
 
     closeOpenDropdowns() {
@@ -1317,14 +1398,53 @@ export class DashboardNinjaMain extends Component {
                 }
             }
 
-            // Build datasets for Hammad Akbar All-in-One Analytics
+            // Build datasets for Hammad Akbar All-in-One Analytics with Custom Segment Coloring support
+            const PALETTE_MAP = {
+                default: {
+                    bar1: isDark ? "#00e5ff" : "#1e293b",
+                    bar2: isDark ? "#ec4899" : "#be185d",
+                    line1: "#7c3aed",
+                    line2: "#db2777",
+                    slices: ["#7e22ce", "#be185d", "#e11d48", "#4c1d95", "#6366f1", "#9333ea"],
+                },
+                ocean: {
+                    bar1: "#0284c7",
+                    bar2: "#06b6d4",
+                    line1: "#2563eb",
+                    line2: "#0891b2",
+                    slices: ["#0369a1", "#0284c7", "#0ea5e9", "#38bdf8", "#2563eb", "#1d4ed8"],
+                },
+                emerald: {
+                    bar1: "#059669",
+                    bar2: "#d97706",
+                    line1: "#10b981",
+                    line2: "#f59e0b",
+                    slices: ["#047857", "#10b981", "#f59e0b", "#0d9488", "#84cc16", "#eab308"],
+                },
+                sunset: {
+                    bar1: "#e11d48",
+                    bar2: "#ea580c",
+                    line1: "#dc2626",
+                    line2: "#f97316",
+                    slices: ["#be123c", "#e11d48", "#f97316", "#f59e0b", "#9333ea", "#ec4899"],
+                },
+                neon: {
+                    bar1: "#8b5cf6",
+                    bar2: "#ec4899",
+                    line1: "#06b6d4",
+                    line2: "#f43f5e",
+                    slices: ["#8b5cf6", "#ec4899", "#06b6d4", "#10b981", "#f59e0b", "#3b82f6"],
+                },
+            };
+            const pal = PALETTE_MAP[this.state.segmentPalette] || PALETTE_MAP.default;
+
             let datasets = [];
             if (chartType === "bar") {
                 datasets = [
                     {
                         label: "Online Sales",
                         data: safeValues,
-                        backgroundColor: isDark ? "#00e5ff" : "#1e293b",
+                        backgroundColor: pal.bar1,
                         borderRadius: 3,
                         barPercentage: 0.65,
                         categoryPercentage: 0.6,
@@ -1332,7 +1452,7 @@ export class DashboardNinjaMain extends Component {
                     {
                         label: "Offline Sales",
                         data: safeSecondary.length === safeValues.length ? safeSecondary : safeValues.map((v) => Math.max(1, Math.round(v * 0.75))),
-                        backgroundColor: isDark ? "#ec4899" : "#be185d",
+                        backgroundColor: pal.bar2,
                         borderRadius: 3,
                         barPercentage: 0.65,
                         categoryPercentage: 0.6,
@@ -1343,8 +1463,8 @@ export class DashboardNinjaMain extends Component {
                     {
                         label: "Loyal Customers",
                         data: safeValues,
-                        borderColor: "#7c3aed",
-                        backgroundColor: "#7c3aed",
+                        borderColor: pal.line1,
+                        backgroundColor: pal.line1,
                         borderWidth: 2,
                         pointRadius: 3,
                         tension: 0.3,
@@ -1353,8 +1473,8 @@ export class DashboardNinjaMain extends Component {
                     {
                         label: "New Customers",
                         data: safeSecondary.length === safeValues.length ? safeSecondary : safeValues.map((v) => Math.round(v * 1.25 + 2)),
-                        borderColor: "#db2777",
-                        backgroundColor: "#db2777",
+                        borderColor: pal.line2,
+                        backgroundColor: pal.line2,
                         borderWidth: 2,
                         pointRadius: 3,
                         tension: 0.3,
@@ -1367,7 +1487,7 @@ export class DashboardNinjaMain extends Component {
                         label: "Active Scope",
                         data: safeValues,
                         backgroundColor: "rgba(190, 24, 93, 0.35)",
-                        borderColor: "#be185d",
+                        borderColor: pal.bar2,
                         borderWidth: 1.5,
                         pointRadius: 2,
                     },
@@ -1375,21 +1495,13 @@ export class DashboardNinjaMain extends Component {
                         label: "Target Benchmark",
                         data: safeSecondary.length === safeValues.length ? safeSecondary : safeValues.map((v) => Math.round(v * 0.85 + 2)),
                         backgroundColor: "rgba(245, 158, 11, 0.35)",
-                        borderColor: "#d97706",
+                        borderColor: pal.line1,
                         borderWidth: 1.5,
                         pointRadius: 2,
                     },
                 ];
             } else {
-                // Doughnut or Pie (Purple / Berry / Indigo / Rose palette from screenshot)
-                const slicePalette = [
-                    "#7e22ce",
-                    "#be185d",
-                    "#e11d48",
-                    "#4c1d95",
-                    "#6366f1",
-                    "#9333ea",
-                ];
+                const slicePalette = pal.slices;
                 datasets = [
                     {
                         label: chartItem.name,

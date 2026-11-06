@@ -28,23 +28,28 @@
                         <i class="fa fa-envelope-o"/>
                     </button>
 
-                    <!-- 5. Chatter & Notes Drawer -->
-                    <button class="ninja_icon_btn position-relative" t-on-click="() => this.toggleChatterDrawer()" title="Open Dashboard Chatter &amp; Team Notes">
-                        <i class="fa fa-bookmark-o"/>
+                    <!-- 5. Bookmark Dashboard -->
+                    <button t-attf-class="ninja_icon_btn #{this.isBoardBookmarked(state.boardId) ? 'active' : ''}" t-on-click="() => this.toggleBookmarkCurrentBoard()" title="Bookmark Active Dashboard">
+                        <i t-att-class="this.isBoardBookmarked(state.boardId) ? 'fa fa-bookmark text-warning' : 'fa fa-bookmark-o'"/>
+                    </button>
+
+                    <!-- 6. Internal Chat & Team Notes Drawer -->
+                    <button class="ninja_icon_btn position-relative" t-on-click="() => this.toggleChatterDrawer()" title="Open Internal Chat &amp; Team Notes">
+                        <i class="fa fa-comments-o"/>
                         <span t-if="state.chatterCount" class="ninja_mini_badge" t-esc="state.chatterCount"/>
                     </button>
 
-                    <!-- 6. Camera / Export All Data -->
+                    <!-- 7. Camera / Export All Data -->
                     <button class="ninja_icon_btn" t-on-click="() => this.exportFullDashboardCSV()" title="Export Dashboard Snapshot (CSV)">
                         <i class="fa fa-camera"/>
                     </button>
 
-                    <!-- 7. Theme Switcher Dropdown -->
+                    <!-- 8. Theme & Custom Segment Coloring Switcher Dropdown -->
                     <div class="dropdown position-relative" t-on-click.stop="() => {}">
-                        <button class="ninja_icon_btn" t-on-click.stop="() => this.toggleThemeMenu()" title="Change Dashboard Theme">
+                        <button class="ninja_icon_btn" t-on-click.stop="() => this.toggleThemeMenu()" title="Change Theme &amp; Custom Segment Coloring">
                             <i class="fa fa-sliders"/>
                         </button>
-                        <div t-if="state.showThemeMenu" class="ninja_popover_menu p-2 rounded-3 shadow-lg position-absolute start-0 mt-2 z-index-dropdown">
+                        <div t-if="state.showThemeMenu" class="ninja_popover_menu p-2 rounded-3 shadow-lg position-absolute start-0 mt-2 z-index-dropdown" style="min-width: 240px;">
                             <div class="px-2 py-1 text-muted small fw-bold text-uppercase">Select Theme</div>
                             <button class="dropdown-item rounded py-2 px-3 d-flex align-items-center gap-2" t-on-click="() => this.setTheme('pastel')">
                                 <span class="badge rounded-circle p-1" style="background:#d8cfe8; border:1px solid #7e22ce;"/> 🎨 Pastel Studio (Default)
@@ -57,6 +62,23 @@
                             </button>
                             <button class="dropdown-item rounded py-2 px-3 d-flex align-items-center gap-2" t-on-click="() => this.setTheme('midnight')">
                                 <span class="badge rounded-circle p-1" style="background:#7c3aed;"/> 🟣 Midnight Violet
+                            </button>
+                            <hr class="my-1"/>
+                            <div class="px-2 py-1 text-muted small fw-bold text-uppercase">🌈 Custom Segment Coloring</div>
+                            <button class="dropdown-item rounded py-1 px-3 small d-flex align-items-center gap-2" t-on-click="() => this.setSegmentPalette('default')">
+                                <span class="badge rounded-circle p-1" style="background:#7e22ce;"/> Studio Indigo &amp; Rose
+                            </button>
+                            <button class="dropdown-item rounded py-1 px-3 small d-flex align-items-center gap-2" t-on-click="() => this.setSegmentPalette('ocean')">
+                                <span class="badge rounded-circle p-1" style="background:#0284c7;"/> Ocean Breeze (Blue/Cyan)
+                            </button>
+                            <button class="dropdown-item rounded py-1 px-3 small d-flex align-items-center gap-2" t-on-click="() => this.setSegmentPalette('emerald')">
+                                <span class="badge rounded-circle p-1" style="background:#059669;"/> Emerald &amp; Gold
+                            </button>
+                            <button class="dropdown-item rounded py-1 px-3 small d-flex align-items-center gap-2" t-on-click="() => this.setSegmentPalette('sunset')">
+                                <span class="badge rounded-circle p-1" style="background:#e11d48;"/> Sunset Coral &amp; Orange
+                            </button>
+                            <button class="dropdown-item rounded py-1 px-3 small d-flex align-items-center gap-2" t-on-click="() => this.setSegmentPalette('neon')">
+                                <span class="badge rounded-circle p-1" style="background:#ec4899;"/> Cyber Neon Spectrum
                             </button>
                         </div>
                     </div>
@@ -132,11 +154,16 @@
                     </div>
                 </div>
 
-                <!-- Right AI Sparkle, AI Report, Data Upload, PDF Export & Create New Chart Buttons -->
+                <!-- Right AI Sparkle, Overview, AI Report, Data Upload, PDF Export & Create New Chart Buttons -->
                 <div class="d-flex flex-wrap align-items-center gap-2">
                     <!-- Sparkle AI Copilot Trigger -->
                     <button class="ninja_sparkle_btn" t-on-click="() => this.toggleAIChat()" title="Open AI Copilot, Multi-Language Report Generator &amp; Voice AI">
                         <i class="fa fa-magic"/>
+                    </button>
+
+                    <!-- Dashboard Overview & Industry Hub Trigger -->
+                    <button class="ninja_action_pill_btn ninja_create_chart_btn" t-on-click="() => this.toggleOverviewModal()" title="Open Dashboard Overview, Pre-Built Odoo Apps &amp; 12 Industry Templates">
+                        <i class="fa fa-th-large text-primary me-1"/> Overview
                     </button>
 
                     <!-- AI Report Generator Trigger -->
@@ -674,6 +701,79 @@
                                 <i class="fa fa-bolt me-2"/> Build Dashboard Now
                             </t>
                         </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Overview: Pre-Built Odoo Apps (5) + Tailored Industry Dashboards (12) Modal -->
+            <div t-if="state.showOverviewModal" class="ninja_modal_overlay" t-on-click.self="() => this.toggleOverviewModal()">
+                <div class="ninja_modal_card p-4 rounded-4 shadow-lg" style="max-width: 960px; width: 95%; max-height: 88vh; overflow-y: auto;">
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                        <div>
+                            <span class="badge bg-danger rounded-pill px-3 py-1 mb-1">★ BY HAMMAD AKBAR • AI FIRST, ALWAYS</span>
+                            <h4 class="fw-bold mb-0">📊 Dashboard Overview &amp; Industry Templates Hub</h4>
+                        </div>
+                        <button class="btn-close" t-on-click="() => this.toggleOverviewModal()"/>
+                    </div>
+
+                    <!-- Section A: 5 Pre-Built Dashboards For The Odoo Apps -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-primary text-uppercase small mb-2">
+                            <i class="fa fa-cubes me-1"/> Pre-Built Dashboards For The Odoo Apps (1-Click Switch)
+                        </h6>
+                        <div class="row g-2">
+                            <t t-foreach="[['Account', '🏦', 'Accounting, invoices &amp; financial KPIs'], ['Inventory', '📦', 'Stock levels, warehouse &amp; moves'], ['Sales', '📈', 'Sales KPIs, orders &amp; revenue share'], ['CRM', '🤝', '360-degree leads, pipeline &amp; conversion'], ['Website', '🌐', 'Website traffic, eCommerce &amp; retention']]" t-as="app" t-key="app[0]">
+                                <div class="col-6 col-md-4 col-lg-2">
+                                    <div class="p-2 rounded-3 border bg-light h-100 d-flex flex-column justify-content-between text-center">
+                                        <div>
+                                            <div style="font-size: 24px;" t-esc="app[1]"/>
+                                            <div class="fw-bold small mt-1" t-esc="app[0]"/>
+                                            <div class="text-muted" style="font-size: 11px;" t-esc="app[2]"/>
+                                        </div>
+                                        <button class="btn btn-sm btn-primary rounded-pill mt-2 py-0" t-on-click="() => this.launchIndustryBoard(app[0])">
+                                            Open
+                                        </button>
+                                    </div>
+                                </div>
+                            </t>
+                            <div class="col-6 col-md-4 col-lg-2">
+                                <div class="p-2 rounded-3 border bg-primary bg-opacity-10 h-100 d-flex flex-column justify-content-between text-center">
+                                    <div>
+                                        <div style="font-size: 24px;">🌐</div>
+                                        <div class="fw-bold small mt-1">All-in-One</div>
+                                        <div class="text-muted" style="font-size: 11px;">Complete 12-item executive view</div>
+                                    </div>
+                                    <button class="btn btn-sm btn-dark rounded-pill mt-2 py-0" t-on-click="() => { this.toggleOverviewModal(); this.switchBoard('all'); }">
+                                        Open All
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section B: 12 Tailored Dashboards For Every Industry Need -->
+                    <div>
+                        <h6 class="fw-bold text-dark text-uppercase small mb-2">
+                            <i class="fa fa-industry me-1"/> Tailored Dashboards For Every Industry Need (12 Industries)
+                        </h6>
+                        <div class="row g-2">
+                            <t t-foreach="[['Retail &amp; E-commerce', '🏪', 'Sales, inventory &amp; store channels'], ['Manufacturing', '⚙️', 'Production KPIs, stock &amp; supply chain'], ['Healthcare', '❤️', 'Appointments, medical stock &amp; billing'], ['Finance &amp; Banking', '🏦', 'Account KPIs, invoices, ROI &amp; audits'], ['Education &amp; EdTech', '🎓', 'Student data, attendance &amp; faculty KPIs'], ['Real Estate', '🏢', 'Property leads, visits &amp; agent sales'], ['Logistics &amp; Transport', '🚚', 'Delivery routes, fleet &amp; fuel metrics'], ['Hospitality &amp; Travel', '🏨', 'Bookings, campaigns &amp; property revenue'], ['IT &amp; SaaS', '☁️', 'Sprints, active users &amp; support KPIs'], ['NGOs &amp; Non-Profits', '🤝', 'Donations, volunteers &amp; campaign impact'], ['Media &amp; Entertainment', '🎬', 'Content pipelines, ad revenue &amp; reach'], ['Legal &amp; Compliance', '⚖️', 'Case progress, billable hours &amp; audits']]" t-as="ind" t-key="ind[0]">
+                                <div class="col-12 col-sm-6 col-md-4">
+                                    <div class="p-2 rounded-3 border bg-white d-flex align-items-center justify-content-between gap-2 shadow-xs">
+                                        <div class="d-flex align-items-center gap-2 text-truncate">
+                                            <span style="font-size: 22px;" t-esc="ind[1]"/>
+                                            <div class="text-truncate">
+                                                <div class="fw-bold small text-truncate" t-esc="ind[0]"/>
+                                                <div class="text-muted text-truncate" style="font-size: 11px;" t-esc="ind[2]"/>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-primary rounded-pill px-2 py-0 flex-shrink-0" t-on-click="() => this.launchIndustryBoard(ind[0])">
+                                            Launch
+                                        </button>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
                     </div>
                 </div>
             </div>
