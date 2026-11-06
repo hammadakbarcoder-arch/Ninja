@@ -225,7 +225,7 @@ export class DashboardNinjaMain extends Component {
                 this.state.boardName = matched ? matched.name : (data.name || "Dashboard");
             }
 
-            this.state.aiSummary = data.ai_summary || "Welcome to Ninja AI Copilot. Ask anything about your metrics.";
+            this.state.aiSummary = "";
 
             const items = data.items || [];
             const rawKpis = items.filter((it) => it.type === "kpi");
@@ -512,9 +512,6 @@ export class DashboardNinjaMain extends Component {
 
     toggleAIChat() {
         this.state.showAIChat = !this.state.showAIChat;
-        if (this.state.showAIChat && (!this.state.aiSummary || this.state.aiSummary.includes("Click 'Ask"))) {
-            this.sendAIPrompt();
-        }
     }
 
     openGenAIModal() {
@@ -634,7 +631,7 @@ export class DashboardNinjaMain extends Component {
             return "ar";
         }
         const low = ` ${text.toLowerCase()} `;
-        const romanWords = [" kya ", " kia ", " hai ", " hain ", " mujhe ", " mujy ", " banao ", " bna ", " dikhao ", " batao ", " aur ", " ka ", " ki ", " ke ", " mein ", " main ", " sy ", " hisab ", " munafa "];
+        const romanWords = [" kya ", " kia ", " hai ", " hain ", " mujhe ", " mujy ", " banao ", " bna ", " dikhao ", " batao ", " aur ", " ka ", " ki ", " ke ", " mein ", " sy ", " mukammal ", " hisab ", " munafa "];
         if (romanWords.some((w) => low.includes(w))) return "ro_ur";
         return "en";
     }
@@ -645,7 +642,7 @@ export class DashboardNinjaMain extends Component {
             .slice(0, 4)
             .map((k) => `${k.name}: ${this.formatKpiValue(k)}`)
             .join(" | ");
-        const focusNote = promptText ? `"${promptText}" — ` : "";
+        const focusNote = promptText ? `Topic: "${promptText}" — ` : "";
         if (lang === "ro_ur") {
             return `✨ Ninja AI Executive Briefing (${this.state.boardName}): ${focusNote}Live Data -> ${kpiSummary || "6 KPIs & 6 Charts Active"}.\n💡 AI Mashwara: Corporate accounts aur top selling products par focus barhayein taake Q4 target 100% achieve ho.`;
         }
@@ -661,7 +658,6 @@ export class DashboardNinjaMain extends Component {
     openAIReportStudio() {
         this.state.showAIChat = true;
         this.state.aiStudioTab = "report";
-        this.generateStructuredAIReport();
     }
 
     openDataUploadStudio() {
@@ -847,14 +843,14 @@ export class DashboardNinjaMain extends Component {
             );
             if (res && res.status === "success") {
                 this.state.currentReport = res;
-                this.state.aiSummary = `${res.auto_summary}\n\n${res.narrative}`;
+                this.state.aiSummary = res.auto_summary || "";
                 this._saveReportToHistory(res);
                 this.state.userPrompt = "";
                 this.notification.add("✨ AI Executive Report & Analytics generated!", { type: "success" });
             } else {
                 const fallbackReport = this._buildLocalStructuredReport(prompt);
                 this.state.currentReport = fallbackReport;
-                this.state.aiSummary = `${fallbackReport.auto_summary}\n\n${fallbackReport.narrative}`;
+                this.state.aiSummary = fallbackReport.auto_summary || "";
                 this._saveReportToHistory(fallbackReport);
                 this.state.userPrompt = "";
                 this.notification.add("✨ AI Executive Report & Analytics generated!", { type: "success" });
@@ -863,7 +859,7 @@ export class DashboardNinjaMain extends Component {
             console.warn("Using instant client-side AI report synthesis:", err);
             const fallbackReport = this._buildLocalStructuredReport(prompt);
             this.state.currentReport = fallbackReport;
-            this.state.aiSummary = `${fallbackReport.auto_summary}\n\n${fallbackReport.narrative}`;
+            this.state.aiSummary = fallbackReport.auto_summary || "";
             this._saveReportToHistory(fallbackReport);
             this.state.userPrompt = "";
             this.notification.add("✨ AI Executive Report & Analytics generated!", { type: "success" });
@@ -1077,7 +1073,7 @@ export class DashboardNinjaMain extends Component {
 
     openHistoryReport(hist) {
         this.state.currentReport = hist;
-        this.state.aiSummary = `${hist.auto_summary}\n\n${hist.narrative}`;
+        this.state.aiSummary = hist.auto_summary || "";
         this.state.aiStudioTab = "report";
     }
 

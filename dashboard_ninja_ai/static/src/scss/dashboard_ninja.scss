@@ -415,8 +415,24 @@
     }
 
     .ninja_custom_date_bar, .ninja_ai_copilot_panel {
-        background: #f8fafc;
-        border: 1px solid #cbd5e1;
+        background: #ffffff !important;
+        border: 2px solid #cbd5e1 !important;
+        color: #0f172a !important;
+
+        input.form-control, select.form-select, textarea.form-control {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            font-weight: 700 !important;
+            -webkit-text-fill-color: #0f172a !important;
+            opacity: 1 !important;
+
+            &::placeholder {
+                color: #64748b !important;
+                -webkit-text-fill-color: #64748b !important;
+                font-weight: 500 !important;
+                opacity: 1 !important;
+            }
+        }
     }
 
     .ninja_ai_response_box {
@@ -436,10 +452,24 @@
         z-index: 1070;
     }
 
-    .ninja_modal_dialog {
+    .ninja_modal_dialog, .ninja_chatter_drawer {
         background: #ffffff;
-        color: #1e293b;
+        color: #0f172a;
         border: 1px solid #cbd5e1;
+
+        input.form-control, select.form-select, textarea.form-control {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            font-weight: 600 !important;
+            -webkit-text-fill-color: #0f172a !important;
+            opacity: 1 !important;
+
+            &::placeholder {
+                color: #64748b !important;
+                -webkit-text-fill-color: #64748b !important;
+                opacity: 1 !important;
+            }
+        }
     }
 
     .ninja_chatter_overlay {
