@@ -22,12 +22,12 @@ class TestWhatsAppAllInOne(TransactionCase):
 
     def test_default_templates_exist(self):
         """Verify pre-installed default templates."""
-        so_template = self.env.ref('whatsapp_all_in_one.whatsapp_template_sales_order', raise_if_not_found=False)
+        so_template = self.env.ref('whatsapp_all_in_one_engine.whatsapp_template_sales_order', raise_if_not_found=False)
         self.assertTrue(so_template, "Sales Order default template should exist")
         self.assertEqual(so_template.category, 'UTILITY')
         self.assertEqual(so_template.header_type, 'document')
 
-        inv_template = self.env.ref('whatsapp_all_in_one.whatsapp_template_customer_invoice', raise_if_not_found=False)
+        inv_template = self.env.ref('whatsapp_all_in_one_engine.whatsapp_template_customer_invoice', raise_if_not_found=False)
         self.assertTrue(inv_template, "Customer Invoice default template should exist")
 
     def test_message_log_creation(self):

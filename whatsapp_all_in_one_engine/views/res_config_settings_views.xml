@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
-                <app data-string="WhatsApp Engine" string="WhatsApp Engine" name="whatsapp_all_in_one">
+                <app data-string="WhatsApp Engine" string="WhatsApp Engine" name="whatsapp_all_in_one_engine">
                     <block title="Official Meta WhatsApp Cloud API Configuration" name="meta_whatsapp_config">
                         <div class="row mt16 o_settings_container">
                             <setting id="meta_credentials" string="Meta Cloud API Credentials" help="Set your Meta for Developers credentials for direct official messaging.">
@@ -86,6 +86,6 @@
         <field name="name">WhatsApp Settings</field>
         <field name="res_model">res.config.settings</field>
         <field name="view_mode">form</field>
-        <field name="context">{'module': 'whatsapp_all_in_one', 'bin_size': False}</field>
+        <field name="context">{'module': 'whatsapp_all_in_one_engine', 'bin_size': False}</field>
     </record>
 </odoo>
