@@ -39,10 +39,10 @@ class WhatsAppApiService(models.AbstractModel):
     def _get_api_credentials(self):
         """Retrieve Meta Cloud API configuration."""
         ICP = self.env['ir.config_parameter'].sudo()
-        base_url = ICP.get_param('whatsapp_all_in_one.api_url', 'https://graph.facebook.com')
-        version = ICP.get_param('whatsapp_all_in_one.api_version', 'v21.0')
-        phone_id = ICP.get_param('whatsapp_all_in_one.phone_number_id')
-        token = ICP.get_param('whatsapp_all_in_one.access_token')
+        base_url = ICP.get_param('whatsapp_all_in_one_engine.api_url', 'https://graph.facebook.com')
+        version = ICP.get_param('whatsapp_all_in_one_engine.api_version', 'v21.0')
+        phone_id = ICP.get_param('whatsapp_all_in_one_engine.phone_number_id')
+        token = ICP.get_param('whatsapp_all_in_one_engine.access_token')
 
         if not phone_id or not token:
             _logger.warning("WhatsApp Meta Cloud API is not configured. Missing Phone ID or Access Token.")

@@ -31,7 +31,7 @@ Developed by **Junaid & Hammad Akbar**
 ## 📦 Directory Structure
 
 ```
-whatsapp_all_in_one/
+whatsapp_all_in_one_engine/
 ├── __init__.py
 ├── __manifest__.py
 ├── README.md
@@ -83,10 +83,10 @@ whatsapp_all_in_one/
 
 ## 🚀 60-Second Setup
 
-1. Copy `whatsapp_all_in_one` to your Odoo `addons` directory.
+1. Copy `whatsapp_all_in_one_engine` to your Odoo `addons` directory.
 2. Update App List in Odoo Developer Mode or run:
    ```bash
-   odoo-bin -c config.conf -d <your_db> -i whatsapp_all_in_one
+   odoo-bin -c config.conf -d <your_db> -i whatsapp_all_in_one_engine
    ```
 3. Open **WhatsApp Engine $\rightarrow$ Accounts & QR Setup**:
    - Click **New**, enter your phone number and label.

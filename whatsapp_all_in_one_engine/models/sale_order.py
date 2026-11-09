@@ -19,7 +19,7 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).action_confirm()
 
         ICP = self.env['ir.config_parameter'].sudo()
-        auto_send = ICP.get_param('whatsapp_all_in_one.auto_sale', False)
+        auto_send = ICP.get_param('whatsapp_all_in_one_engine.auto_sale', False)
 
         if auto_send:
             for order in self:
@@ -31,7 +31,7 @@ class SaleOrder(models.Model):
         """Helper method to send WhatsApp for confirmed sale order."""
         self.ensure_one()
         ICP = self.env['ir.config_parameter'].sudo()
-        template_id = ICP.get_param('whatsapp_all_in_one.sale_template_id')
+        template_id = ICP.get_param('whatsapp_all_in_one_engine.sale_template_id')
         template = False
         if template_id:
             template = self.env['whatsapp.template'].browse(int(template_id))
@@ -54,7 +54,7 @@ class SaleOrder(models.Model):
         """Open interactive WhatsApp Composer for this Sales Order."""
         self.ensure_one()
         ICP = self.env['ir.config_parameter'].sudo()
-        template_id = ICP.get_param('whatsapp_all_in_one.sale_template_id')
+        template_id = ICP.get_param('whatsapp_all_in_one_engine.sale_template_id')
         template = self.env['whatsapp.template'].browse(int(template_id)) if template_id else False
         if not template or not template.exists():
             template = self.env['whatsapp.template'].search([('model', '=', 'sale.order')], limit=1)

@@ -96,27 +96,27 @@
 
         <!-- Set Default Configuration Parameters -->
         <record id="param_auto_sale" model="ir.config_parameter">
-            <field name="key">whatsapp_all_in_one.auto_sale</field>
+            <field name="key">whatsapp_all_in_one_engine.auto_sale</field>
             <field name="value">True</field>
         </record>
         <record id="param_sale_template" model="ir.config_parameter">
-            <field name="key">whatsapp_all_in_one.sale_template_id</field>
+            <field name="key">whatsapp_all_in_one_engine.sale_template_id</field>
             <field name="value" eval="ref('whatsapp_template_sales_order')"/>
         </record>
         <record id="param_auto_invoice" model="ir.config_parameter">
-            <field name="key">whatsapp_all_in_one.auto_invoice</field>
+            <field name="key">whatsapp_all_in_one_engine.auto_invoice</field>
             <field name="value">True</field>
         </record>
         <record id="param_invoice_template" model="ir.config_parameter">
-            <field name="key">whatsapp_all_in_one.invoice_template_id</field>
+            <field name="key">whatsapp_all_in_one_engine.invoice_template_id</field>
             <field name="value" eval="ref('whatsapp_template_customer_invoice')"/>
         </record>
         <record id="param_auto_delivery" model="ir.config_parameter">
-            <field name="key">whatsapp_all_in_one.auto_delivery</field>
+            <field name="key">whatsapp_all_in_one_engine.auto_delivery</field>
             <field name="value">True</field>
         </record>
         <record id="param_delivery_template" model="ir.config_parameter">
-            <field name="key">whatsapp_all_in_one.delivery_template_id</field>
+            <field name="key">whatsapp_all_in_one_engine.delivery_template_id</field>
             <field name="value" eval="ref('whatsapp_template_delivery_order')"/>
         </record>
     </data>
