@@ -21,7 +21,7 @@ Transform your Odoo business data into a next-generation autonomous AI command c
     """,
     'author': 'Hammad Akbar',
     'maintainer': 'Hammad Akbar',
-    'website': 'https://apps.odoo.com/apps/modules/browse?author=Hammad%20Akbar',
+    'website': 'https://hammad-akbar-odoo-store.netlify.app',
     'license': 'OPL-1',
     'price': 149.00,
     'currency': 'USD',
